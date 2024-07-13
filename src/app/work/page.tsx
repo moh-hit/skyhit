@@ -49,7 +49,7 @@ function page() {
               </p>
               <p className="text-md md:text-lg">{description}</p>
               <div className="flex flex-row gap-4 items-center">
-                <div className="flex flex-row gap-2 items-center">
+                <div className="flex flex-row gap-2 items-center flex-wrap">
                   {stack.map(({ name, color, accent }) => (
                     <Badge
                       key={name}
