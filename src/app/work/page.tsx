@@ -10,14 +10,16 @@ function page() {
   return (
     <main className="flex min-h-screen flex-row items-start p-10 gap-10">
       <div className="flex flex-1 flex-col items-start gap-10">
-        <h2 className="font-display text-4xl md:text-6xl font-medium">Work</h2>
-        <p className="font-normal text-lg md:text-2xl">
-          In my experience of working for more than 4 years, I have worked on
-          various projects ranging from designing and building websites to
-          building and maintaining backend services. I have also worked on
-          projects that involved working with different technologies like React
-          Native, React, Next.js, Golang, Typescript, and more.
-        </p>
+        <div className="w-full flex flex-col gap-6 md:h-[calc(40vh)] items-center justify-center">
+          <h2 className="font-display text-4xl md:text-6xl font-medium">
+            Work
+          </h2>
+          <p className="font-normal text-lg md:text-2xl text-center max-w-[75%]">
+            In my experience of working for more than 4 years, I have worked on
+            various projects ranging from designing and building websites to
+            building and maintaining backend services.
+          </p>
+        </div>
         {work.map(
           ({
             title,
@@ -44,7 +46,7 @@ function page() {
                   <span>{position}</span>
                 </div>
               </div>
-              <p className="font-semibold text-md md:text-lg">
+              <p className="font-semibold text-md md:text-lg mb-10">
                 Joined {joined}
               </p>
               <p className="text-md md:text-lg">{description}</p>

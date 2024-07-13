@@ -20,6 +20,7 @@ import { TooltipTrigger } from "@radix-ui/react-tooltip"
 import { Button } from "./ui/button"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { blogs } from "@/lib/blogs"
 
 const socials = [
   {
@@ -27,42 +28,42 @@ const socials = [
     href: "https://github.com/moh-hit",
     icon: IconBrandGithub,
     color: "text-slate-600",
-    accent: "bg-slate-100",
+    accent: "bg-blue-50",
   },
   {
     name: "Twitter",
-    href: "https://twitter.com/mohitoo",
+    href: "https://x.com/moh_itoo",
     icon: IconBrandTwitter,
     color: "text-sky-600",
-    accent: "bg-sky-100",
+    accent: "bg-blue-50",
   },
   {
     name: "Instagram",
-    href: "https://instagram.com/mohit.oo",
+    href: "https://www.instagram.com/_moh.itoo_",
     icon: IconBrandInstagram,
     color: "text-pink-600",
-    accent: "bg-pink-100",
+    accent: "bg-blue-50",
   },
   {
     name: "Email",
-    href: "mailto:moh.hit1012@gmail.com",
+    href: "mailto: moh.hit1012@gmail.com",
     icon: IconMail,
     color: "text-red-600",
-    accent: "bg-red-100",
+    accent: "bg-blue-50",
   },
   {
     name: "Linkedin",
-    href: "https://twitter.com/mohitoo",
+    href: "https://www.linkedin.com/in/moh-it10/",
     icon: IconBrandLinkedin,
     color: "text-blue-600",
-    accent: "bg-blue-100",
+    accent: "bg-blue-50",
   },
   {
     name: "Discord",
-    href: "https://discord.gg/9w4q3u4",
+    href: "https://discord.gg/Px9yUQCu",
     icon: IconBrandDiscord,
     color: "text-indigo-600",
-    accent: "bg-indigo-100",
+    accent: "bg-blue-50",
   },
 ]
 
@@ -75,7 +76,7 @@ function ExploreCards() {
 
   return (
     <div className="flex flex-1 flex-col md:flex-row justify-between w-full h-full gap-10">
-      <div className="relative flex flex-1 p-6 w-full h-full rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between card min-h-52">
+      <div className="relative flex flex-1 p-6 w-full h-full rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between card min-h-72">
         <h2 className="font-display text-3xl md:text-4xl cardContent">
           Explore my work
         </h2>
@@ -98,7 +99,7 @@ function ExploreCards() {
           Go to career
         </Button>
       </div>
-      <div className="relative flex flex-1 p-6 w-full h-full rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between card min-h-52">
+      <div className="relative flex flex-1 p-6 w-full h-full rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between card min-h-72">
         <h2 className="font-display text-3xl md:text-4xl cardContent">
           Read my blogs
         </h2>
@@ -109,7 +110,7 @@ function ExploreCards() {
           <h2 className="font-display text-md md:text-xl font-medium">
             Latest blog
           </h2>
-          <h2 className="line-clamp-3">How does compound components work?</h2>
+          <h2 className="line-clamp-3">{blogs[0].title}</h2>
         </Link>
         <Button
           className="w-full rounded-xl"
@@ -120,7 +121,7 @@ function ExploreCards() {
           Go to blogs
         </Button>
       </div>
-      <div className="flex flex-1 p-6 w-full h-full rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between min-h-52">
+      <div className="flex flex-1 p-6 w-full h-full rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between min-h-72">
         <h2 className="font-display text-3xl md:text-4xl">
           Checkout my app{" "}
           <span className="text-indigo-600 text-xl md:text-2xl">
@@ -136,7 +137,7 @@ function ExploreCards() {
           Go to app
         </Button>
       </div>
-      <div className="flex flex-1 p-6 w-full h-full min-h-56 rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between">
+      <div className="flex flex-1 p-6 w-full h-full min-h-72 rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between">
         <h2 className="font-display text-3xl md:text-4xl">
           Find me on socials
         </h2>
@@ -149,7 +150,7 @@ function ExploreCards() {
                     href={href}
                     target="_blank"
                     rel="noreferrer"
-                    className={`p-3 rounded-full hover:${accent} transition-colors duration-500`}
+                    className={`p-3 rounded-full  transition-colors hover:${accent}  duration-500`}
                   >
                     <Icon className={`h-10 w-10 md:h-8 md:w-8 ${color}`} />
                   </a>

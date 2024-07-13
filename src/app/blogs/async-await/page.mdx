@@ -1,12 +1,22 @@
 import Image from "next/image"
 
-![async-await](/blogs/asyn-await.webp)
-
 # Async Await Is The Worst Thing To Happen To Programming
+
+![async-await](/blogs/async-await/async-await.png)
+
+<div className="flex items-center gap-2 pb-10 border-b border-slate-200">
+  <div className="relative w-12 h-12 rounded-full overflow-hidden">
+    <Image src="/authors/mohit.jpeg" alt="Mohit Kumar" fill objectFit="cover" />
+  </div>
+  <div className="flex flex-col">
+    <h2 className="font-bold">Mohit Kumar</h2>
+    <span className="text-sm">5 min read</span>
+  </div>
+</div>
 
 I recently saw this meme about `async` and `await`.
 
-![async-await](/blogs/asyn-await-1.webp)
+![async-await](/blogs/async-await/async-await-meme.webp)
 
 It’s so good. It captures exactly how I feel about `async` and `await`. If you wait for `async` code your function now has to be async as well. And if there’s any function relying on that function that code also has to be async and on and on and on. Until you reach the top level.
 
