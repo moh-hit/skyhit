@@ -6,6 +6,7 @@ import {
 import "./globals.css"
 import { cn } from "@/lib/utils"
 import Header from "@/components/ui/header"
+import { Toaster } from "@/components/ui/sonner"
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -39,6 +40,7 @@ export default function RootLayout({
       >
         <Header />
         {children}
+        <Toaster />
       </body>
     </html>
   )

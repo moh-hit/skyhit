@@ -132,9 +132,10 @@ function ExploreCards() {
           className="w-full rounded-xl text-md"
           variant="outline"
           onClick={onGoToPage("app")}
+          disabled
         >
           <IconDeviceMobile className="h-5 w-5 text-indigo-600 mr-2" />
-          Go to app
+          Coming Soon
         </Button>
       </div>
       <div className="flex flex-1 p-6 w-full h-full md:w-[45%] xl:w-full min-h-72 rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between">

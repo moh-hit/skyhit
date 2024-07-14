@@ -1,28 +1,9 @@
 import ExploreCards from "@/components/explore-cards"
-import { Button } from "@/components/ui/button"
+import LetsTalk from "@/components/lets-talk"
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import {
-  IconArrowRight,
   IconBook,
-  IconBrandDiscord,
-  IconBrandGithub,
-  IconBrandInstagram,
-  IconBrandLinkedin,
-  IconBrandTwitter,
   IconBuildingBridge,
   IconCode,
-  IconMail,
   IconUsers,
   IconVectorTriangle,
 } from "@tabler/icons-react"
@@ -74,47 +55,7 @@ export default function Home() {
               </ul>
             </span>
           </div>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button
-                className="font-bold rounded-full bg-gradient-to-r from-indigo-600 to-blue-500"
-                size="xl"
-              >
-                {`Let's Talk`}
-                <IconArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>{"Contact me"}</DialogTitle>
-                <DialogDescription>
-                  {"Let's get in touch and find out how I can help you."}
-                </DialogDescription>
-              </DialogHeader>
-              <div className="flex flex-col gap-6 py-4">
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="name">Name</Label>
-                  <Input id="name" defaultValue="" />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" defaultValue="" />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="message">Message</Label>
-                  <Textarea id="message" defaultValue="" />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button
-                  className="font-bold bg-gradient-to-r from-indigo-600 to-blue-500"
-                  size="xl"
-                >
-                  Submit
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <LetsTalk />
         </div>
         <div className="relative flex flex-1 w-72 h-72">
           {/* <Image src="/bento.png" alt="sticker" fill objectFit="contain" /> */}

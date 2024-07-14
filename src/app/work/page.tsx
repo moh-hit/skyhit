@@ -55,13 +55,13 @@ function page() {
                   </div>
                 </div>
                 <p className="text-md xl:text-lg">{description}</p>
-                <Link
+                {/* <Link
                   className="relative text-sm font-semibold flex items-center after:bg-black after:absolute after:h-[1px] after:rounded-lg after:w-0 after:bottom-0 after:left-0 hover:after:w-[80%] after:transition-all after:duration-300"
                   href={slug}
                 >
                   Learn more
                   <IconChevronRight className="ml-2 h-4 w-4" />
-                </Link>
+                </Link> */}
               </div>
             )
           )}
