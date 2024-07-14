@@ -1,5 +1,8 @@
 import type { Metadata } from "next"
-import { DM_Sans as FontSans, Honk as FontDisplay } from "next/font/google"
+import {
+  DM_Sans as FontSans,
+  Spline_Sans_Mono as FontMono,
+} from "next/font/google"
 import "./globals.css"
 import { cn } from "@/lib/utils"
 import Header from "@/components/ui/header"
@@ -9,14 +12,15 @@ const fontSans = FontSans({
   variable: "--font-sans",
 })
 
-const fontMono = FontDisplay({
+const fontMono = FontMono({
   subsets: ["latin"],
-  variable: "--font-display",
+  variable: "--font-mono",
 })
 
 export const metadata: Metadata = {
-  title: "Mohit - Software Developer",
-  description: "Mohit Kumar's personal website",
+  title: "Mohit Kumar - Software Developer",
+  description:
+    "Mohit Kumar's personal website, a React Native, React and Nextjs developer. Have decent experience in golang and Nodejs as backend. Have worked in multiple domains like Fintech, Gaming, SaaS.",
 }
 
 export default function RootLayout({

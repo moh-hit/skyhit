@@ -1,59 +1,44 @@
 export const blogs = [
   {
-    title: "Async Await Is The Worst Thing To Happen To Programming",
+    title: "Understanding Compound Components in React",
     author: {
       name: "Mohit Kumar",
       image: "/authors/mohit.jpeg",
       slug: "/authors/mohit",
     },
     description:
-      "I recently saw this meme about async and await. It’s so good. It captures exactly how I feel about async and await. If you wait for async code your function now has to be async as well. And if there’s any function relying on that function that code also has to be async and on and on and on. Until you reach the top level.",
-    image: "/blogs/async-await/async-await.png",
-    slug: "/blogs/async-await",
+      "Compound components are a powerful pattern in React that allows you to create flexible and reusable UI components. This pattern can help you build more maintainable and scalable applications by separating concerns and providing a clean API for your components.",
+    image: "/blogs/compound-components/cover.png",
+    slug: "/blogs/compound-components",
     tags: [
       {
         name: "React",
         slug: "/tags/react",
         color: "text-violet-500",
       },
-      {
-        name: "JavaScript",
-        slug: "/tags/javascript",
-        color: "text-yellow-400",
-      },
-      {
-        name: "Async Await",
-        slug: "/tags/async-await",
-        color: "text-blue-500",
-      },
     ],
   },
   {
-    title: "React Native App performance is a myth?",
+    title: "Master React Native Reanimated 2",
     author: {
       name: "Mohit Kumar",
       image: "/authors/mohit.jpeg",
       slug: "/authors/mohit",
     },
     description:
-      "To build cross-platform mobile apps using JavaScript and React, React Native is a popular framework. Leveraging native UI components and APIs enables developers to streamline code across platforms. However, React Native faces challenges affecting performance and developer engagement.",
-    image: "/blogs/react-native-screens/react-native-screens.jpg",
-    slug: "/blogs/react-native-screens",
+      "React Native Reanimated 2 is a powerful library that allows you to create high-performance animations and interactions in your React Native applications. This library is built on top of Reanimated and provides a simple and intuitive API for creating complex animations.",
+    image: "/blogs/mastering-react-native-reanimated-2/cover.png",
+    slug: "/blogs/mastering-react-native-reanimated-2",
     tags: [
       {
         name: "React Native",
         slug: "/tags/react-native",
-        color: "text-indigo-500",
+        color: "text-blue-500",
       },
       {
-        name: "JavaScript",
-        slug: "/tags/javascript",
-        color: "text-yellow-400",
-      },
-      {
-        name: "Performance",
-        slug: "/tags/performance",
-        color: "text-red-400",
+        name: "Reanimated",
+        slug: "/tags/reanimated",
+        color: "text-green-500",
       },
     ],
   },

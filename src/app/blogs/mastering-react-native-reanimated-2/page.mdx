@@ -1,0 +1,424 @@
+import Image from "next/image"
+
+# Master React Native Reanimated 2
+
+![mastering-react-native-reanimated-2](/blogs/mastering-react-native-reanimated-2/cover.png)
+
+<div className="flex justify-between items-end gap-10 border-b border-slate-200 pb-4">
+  <div className="flex items-center gap-2">
+    <div className="relative w-12 h-12 rounded-full overflow-hidden">
+      <Image
+        src="/authors/mohit.jpeg"
+        alt="Mohit Kumar"
+        fill
+        objectFit="cover"
+      />
+    </div>
+    <div className="flex flex-col">
+      <h2 className="font-bold">Mohit Kumar</h2>
+      <span className="text-sm text-green-500">5 min read</span>
+    </div>
+  </div>
+  <h2 className="font-mono font-medium text-sm">14 Jul 2024</h2>
+</div>
+
+React Native has transformed the landscape of mobile app development, enabling developers to create cross-platform applications with ease. Now, with the introduction of Reanimated 2, we're witnessing a quantum leap in animation capabilities. In this comprehensive guide, we'll explore the power of Reanimated 2 and learn how to create fluid, high-performance animations that will take your React Native apps to the next level.
+
+<a name="introduction"></a>
+## 1. Introduction to Reanimated 2
+
+Reanimated 2 is not just an update; it's a complete overhaul of the original library. Designed with performance and developer experience in mind, it introduces a new declarative API and powerful concepts like worklets. These improvements allow for the creation of complex animations that run smoothly on the native thread, minimizing the overhead on the JavaScript thread.
+
+<a name="key-features"></a>
+## 2. Key Features and Improvements
+
+### 2.1 New Declarative API
+
+The new API in Reanimated 2 makes it easier than ever to create and manage animations. It provides a more intuitive way to define animated values and styles.
+
+### 2.2 Worklets
+
+Worklets are small functions that can run on the UI thread, enabling smooth 60 FPS animations even during heavy JavaScript thread activity.
+
+### 2.3 Enhanced Performance
+
+By running animations on the native thread, Reanimated 2 significantly reduces JavaScript bridge traffic, resulting in smoother animations and better overall app performance.
+
+### 2.4 Improved Gesture Handling
+
+Integration with react-native-gesture-handler has been enhanced, allowing for more responsive and natural-feeling gesture-based animations.
+
+<a name="getting-started"></a>
+## 3. Getting Started
+
+To begin using Reanimated 2 in your React Native project, you'll need to install it first:
+
+```bash
+npm install react-native-reanimated@next
+```
+
+For iOS development, don't forget to run:
+
+```bash
+cd ios && pod install
+```
+
+You'll also need to make some changes to your `babel.config.js` file:
+
+```js
+module.exports = {
+  presets: ["module:metro-react-native-babel-preset"],
+  plugins: ["react-native-reanimated/plugin"],
+}
+```
+
+<a name="basic-animations"></a>
+
+## 4. Basic Animations with Reanimated 2
+
+Let's start with a simple animation to demonstrate the new API:
+
+```jsx
+import React from "react"
+import { Button, StyleSheet } from "react-native"
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from "react-native-reanimated"
+
+function AnimatedBox() {
+  const offset = useSharedValue(0)
+
+  const animatedStyles = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: offset.value }],
+    }
+  })
+
+  const handlePress = () => {
+    offset.value = withSpring(Math.random() * 255)
+  }
+
+  return (
+    <>
+      <Animated.View style={[styles.box, animatedStyles]} />
+      <Button onPress={handlePress} title="Move" />
+    </>
+  )
+}
+
+const styles = StyleSheet.create({
+  box: {
+    width: 100,
+    height: 100,
+    backgroundColor: "blue",
+    borderRadius: 20,
+  },
+})
+
+export default AnimatedBox
+```
+
+This code creates a blue box that moves to a random position along the X-axis when you press a button. The animation uses a spring for a natural, bouncy feel.
+
+```
+IMAGE Here
+```
+
+<a name="advanced-techniques"></a>
+
+## 5. Advanced Techniques
+
+### 5.1 Gesture Handling with Worklets
+
+One of the most powerful features of Reanimated 2 is its ability to handle gestures smoothly using worklets. Here's an example of a draggable box:
+
+```jsx
+import React from "react"
+import { StyleSheet } from "react-native"
+import Animated, {
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated"
+import { PanGestureHandler } from "react-native-gesture-handler"
+
+function DraggableBox() {
+  const x = useSharedValue(0)
+  const y = useSharedValue(0)
+
+  const gestureHandler = useAnimatedGestureHandler({
+    onStart: (_, ctx) => {
+      ctx.startX = x.value
+      ctx.startY = y.value
+    },
+    onActive: (event, ctx) => {
+      x.value = ctx.startX + event.translationX
+      y.value = ctx.startY + event.translationY
+    },
+    onEnd: () => {
+      x.value = withSpring(0)
+      y.value = withSpring(0)
+    },
+  })
+
+  const animatedStyles = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: x.value }, { translateY: y.value }],
+    }
+  })
+
+  return (
+    <PanGestureHandler onGestureEvent={gestureHandler}>
+      <Animated.View style={[styles.box, animatedStyles]} />
+    </PanGestureHandler>
+  )
+}
+
+const styles = StyleSheet.create({
+  box: {
+    width: 100,
+    height: 100,
+    backgroundColor: "violet",
+    borderRadius: 20,
+  },
+})
+
+export default DraggableBox
+```
+
+This code creates a violet box that you can drag around the screen. When you release it, it springs back to its original position.
+
+```
+IMAGE Here
+```
+
+### 5.2 Interpolations and Derived Values
+
+Reanimated 2 provides powerful tools for creating complex animations through interpolations and derived values. Here's an example of a color-changing box based on its position:
+
+```jsx
+import React from "react"
+import { Dimensions, StyleSheet } from "react-native"
+import Animated, {
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  interpolateColor,
+} from "react-native-reanimated"
+import { PanGestureHandler } from "react-native-gesture-handler"
+
+const { width } = Dimensions.get("window")
+
+function ColorChangingBox() {
+  const x = useSharedValue(0)
+
+  const gestureHandler = useAnimatedGestureHandler({
+    onActive: (event) => {
+      x.value = event.translationX
+    },
+    onEnd: () => {
+      x.value = 0
+    },
+  })
+
+  const animatedStyles = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(
+      x.value,
+      [-width / 2, 0, width / 2],
+      ["#ff0000", "#00ff00", "#0000ff"]
+    )
+
+    return {
+      backgroundColor,
+      transform: [{ translateX: x.value }],
+    }
+  })
+
+  return (
+    <PanGestureHandler onGestureEvent={gestureHandler}>
+      <Animated.View style={[styles.box, animatedStyles]} />
+    </PanGestureHandler>
+  )
+}
+
+const styles = StyleSheet.create({
+  box: {
+    width: 100,
+    height: 100,
+    borderRadius: 20,
+  },
+})
+
+export default ColorChangingBox
+```
+
+This example creates a box that changes color as you drag it horizontally across the screen.
+
+```
+IMAGE Here
+```
+
+<a name="performance-optimization"></a>
+
+## 6. Performance Optimization
+
+Reanimated 2 is designed with performance in mind, but there are still best practices to follow:
+
+- Use `useSharedValue` for values that need to be animated or changed over time.
+- Minimize the number of animated styles and use `useAnimatedStyle` efficiently.
+- Use worklets for complex calculations that need to run on the UI thread.
+- Leverage `useDerivedValue` for values that depend on other animated values.
+
+Here's an example of using `useDerivedValue` for efficient animations:
+
+```jsx
+import Animated, {
+  useSharedValue,
+  useDerivedValue,
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated"
+
+function EfficiencyExample() {
+  const progress = useSharedValue(0)
+
+  const scale = useDerivedValue(() => 1 + progress.value * 0.5)
+
+  const rotate = useDerivedValue(() => `${progress.value * 2 * Math.PI}rad`)
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }, { rotate: rotate.value }],
+  }))
+
+  // ... rest of the component
+}
+```
+
+<a name="real-world-examples"></a>
+
+## 7. Real-World Examples
+
+Let's look at a more complex, real-world example: a scrollable carousel with parallax effect:
+
+```jsx
+import React from "react"
+import { Dimensions, StyleSheet, View } from "react-native"
+import Animated, {
+  useSharedValue,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  interpolate,
+  Extrapolate,
+} from "react-native-reanimated"
+
+const { width: PAGE_WIDTH } = Dimensions.get("window")
+
+const CARD_WIDTH = PAGE_WIDTH * 0.8
+const CARD_HEIGHT = CARD_WIDTH * 1.5
+
+const VISIBLE_ITEMS = 3
+
+function ParallaxCarousel() {
+  const scrollX = useSharedValue(0)
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollX.value = event.contentOffset.x
+    },
+  })
+
+  const data = Array.from({ length: 10 }, (_, i) => i)
+
+  return (
+    <Animated.ScrollView
+      horizontal
+      pagingEnabled
+      showsHorizontalScrollIndicator={false}
+      onScroll={scrollHandler}
+      scrollEventThrottle={16}
+    >
+      {data.map((_, index) => (
+        <View style={styles.pageContainer} key={index}>
+          <Card index={index} scrollX={scrollX} />
+        </View>
+      ))}
+    </Animated.ScrollView>
+  )
+}
+
+function Card({ index, scrollX }) {
+  const animatedStyle = useAnimatedStyle(() => {
+    const inputRange = [
+      (index - 1) * PAGE_WIDTH,
+      index * PAGE_WIDTH,
+      (index + 1) * PAGE_WIDTH,
+    ]
+
+    const translateY = interpolate(
+      scrollX.value,
+      inputRange,
+      [50, 0, 50],
+      Extrapolate.CLAMP
+    )
+
+    const scale = interpolate(
+      scrollX.value,
+      inputRange,
+      [0.8, 1, 0.8],
+      Extrapolate.CLAMP
+    )
+
+    return {
+      transform: [{ translateY }, { scale }],
+    }
+  })
+
+  return <Animated.View style={[styles.card, animatedStyle]} />
+}
+
+const styles = StyleSheet.create({
+  pageContainer: {
+    width: PAGE_WIDTH,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  card: {
+    width: CARD_WIDTH,
+    height: CARD_HEIGHT,
+    backgroundColor: "tomato",
+    borderRadius: 16,
+  },
+})
+
+export default ParallaxCarousel
+```
+
+This example creates a horizontal scrollable carousel where the cards scale and translate based on their position, creating a parallax effect.
+
+```
+IMAGE Here
+```
+
+<a name="troubleshooting"></a>
+
+## 8. Troubleshooting Common Issues
+
+When working with Reanimated 2, you might encounter some common issues:
+
+- **Animations not running smoothly:** Ensure you're using worklets for complex calculations and minimize bridge communication.
+- **Gesture handlers not working:** Make sure you've properly set up `react-native-gesture-handler` and are using it correctly with Reanimated 2.
+- **Unexpected animation behavior:** Double-check your use of `useSharedValue` and `useAnimatedStyle`. Ensure you're updating shared values correctly.
+- **Build errors:** Verify that you've added the Reanimated plugin to your `babel.config.js` and linked the library correctly.
+
+## Conclusion
+
+React Native Reanimated 2 is a game-changer for creating high-performance animations in React Native applications. Its new declarative API, combined with the power of worklets, opens up a world of possibilities for creating smooth, complex animations that run at 60 FPS, even on lower-end devices.
+
+As you continue to explore Reanimated 2, you'll discover even more features and capabilities. The key to mastering this library is practice and experimentation. Don't be afraid to push the boundaries and create animations that were previously difficult or impossible with React Native.
+
+Remember, great animations can significantly enhance the user experience of your app. With Reanimated 2, you have the tools to create these experiences efficiently and effectively.
+
+Happy animating! 🤖

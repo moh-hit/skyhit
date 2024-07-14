@@ -1,0 +1,248 @@
+import Image from "next/image"
+
+# Understanding Compound Components in React
+
+![compound-components](/blogs/compound-components/cover.png)
+
+<div className="flex justify-between items-end gap-10 border-b border-slate-200 pb-4">
+  <div className="flex items-center gap-2">
+    <div className="relative w-12 h-12 rounded-full overflow-hidden">
+      <Image
+        src="/authors/mohit.jpeg"
+        alt="Mohit Kumar"
+        fill
+        objectFit="cover"
+      />
+    </div>
+    <div className="flex flex-col">
+      <h2 className="font-bold">Mohit Kumar</h2>
+      <span className="text-sm text-green-500">5 min read</span>
+    </div>
+  </div>
+  <h2 className="font-mono font-medium text-sm">14 Jul 2024</h2>
+</div>
+
+Compound components are a powerful pattern in React that allows you to create flexible and reusable UI components. This pattern can help you build more maintainable and scalable applications by separating concerns and providing a clean API for your components.
+
+## What are Compound Components?
+
+Compound components are a set of components that work together to accomplish a single task. They allow you to expose multiple components that work together under a common context, giving you more control over how your components are used and composed.
+
+In traditional component design, you might pass numerous props to a single component, leading to prop drilling and making your code harder to manage. Compound components, on the other hand, allow you to keep related components together, making your code more modular and easier to understand.
+
+## Why Use Compound Components?
+
+There are several reasons why you might want to use compound components in your React applications:
+
+1. **Improved Readability**: By grouping related components together, you can make your code more readable and easier to understand. Each component has a clear role and is responsible for a specific piece of functionality.
+
+2. **Enhanced Flexibility**: Compound components provide a flexible way to manage component state and behavior. You can control the interaction between components without having to manage complex state logic in a single parent component.
+
+3. **Better Reusability**: Components that follow the compound component pattern are highly reusable. You can use them in different contexts without having to modify their internal implementation.
+
+4. **Separation of Concerns**: By separating concerns into distinct components, you can make your code more modular and easier to test. Each component can be tested independently, which improves the overall testability of your application.
+
+## Example: Building a Compound Component
+
+Let's build a simple `<Accordion>` component using the compound component pattern. The `<Accordion>` component will have three parts:
+
+- `<Accordion>`: The container component
+- `<AccordionItem>`: The item component
+- `<AccordionHeader>`: The header component
+- `<AccordionPanel>`: The panel component
+
+Here's how you can build it:
+
+```jsx
+import React, { useState, createContext, useContext } from "react"
+
+// Create a context for the Accordion
+const AccordionContext = createContext()
+
+const Accordion = ({ children }) => {
+  const [openIndex, setOpenIndex] = useState(null)
+
+  const toggleItem = (index) => {
+    setOpenIndex(openIndex === index ? null : index)
+  }
+
+  return (
+    <AccordionContext.Provider value={{ openIndex, toggleItem }}>
+      <div>{children}</div>
+    </AccordionContext.Provider>
+  )
+}
+
+const AccordionItem = ({ children, index }) => {
+  const { openIndex, toggleItem } = useContext(AccordionContext)
+
+  return (
+    <div>
+      {React.Children.map(children, (child) => {
+        return React.cloneElement(child, {
+          isOpen: openIndex === index,
+          onClick: () => toggleItem(index),
+        })
+      })}
+    </div>
+  )
+}
+
+const AccordionHeader = ({ children, onClick }) => (
+  <div onClick={onClick} style={{ cursor: "pointer" }}>
+    {children}
+  </div>
+)
+
+const AccordionPanel = ({ children, isOpen }) => (
+  <div style={{ display: isOpen ? "block" : "none" }}>{children}</div>
+)
+
+// Usage
+const App = () => (
+  <Accordion>
+    <AccordionItem index={0}>
+      <AccordionHeader>Header 1</AccordionHeader>
+      <AccordionPanel>Content 1</AccordionPanel>
+    </AccordionItem>
+    <AccordionItem index={1}>
+      <AccordionHeader>Header 2</AccordionHeader>
+      <AccordionPanel>Content 2</AccordionPanel>
+    </AccordionItem>
+    <AccordionItem index={2}>
+      <AccordionHeader>Header 3</AccordionHeader>
+      <AccordionPanel>Content 3</AccordionPanel>
+    </AccordionItem>
+  </Accordion>
+)
+
+export default App
+```
+
+## How It Works
+
+Let's break down how each part of the `<Accordion>` component works:
+
+**Accordion:** The main container that provides the context for all accordion items. It manages the state of which item is currently open and provides a function to toggle the state.
+
+**AccordionItem:** Wraps each accordion item and uses the context to determine if it is open or closed. It passes the `isOpen` state and the `onClick` handler to its children.
+
+**AccordionHeader:** The clickable header that triggers the opening and closing of the accordion item. It uses the `onClick` handler passed from `AccordionItem` to toggle the item's state.
+
+**AccordionPanel:** The content panel that is shown or hidden based on the state of the accordion item. It uses the `isOpen` state passed from `AccordionItem` to determine whether to display its content.
+
+## Advanced Usage
+
+While the example above demonstrates the basic usage of compound components, there are several advanced techniques you can use to enhance their functionality:
+
+### Default Open Item
+
+You can add a prop to the `<Accordion>` component to specify which item should be open by default:
+
+```jsx
+const Accordion = ({ children, defaultOpenIndex = null }) => {
+  const [openIndex, setOpenIndex] = useState(defaultOpenIndex)
+
+  const toggleItem = (index) => {
+    setOpenIndex(openIndex === index ? null : index)
+  }
+
+  return (
+    <AccordionContext.Provider value={{ openIndex, toggleItem }}>
+      <div>{children}</div>
+    </AccordionContext.Provider>
+  )
+}
+```
+
+## Controlled Accordion
+
+You can convert the `<Accordion>` into a controlled component by managing its state outside the component:
+
+```jsx
+const Accordion = ({ children, openIndex, onToggle }) => {
+  return (
+    <AccordionContext.Provider value={{ openIndex, toggleItem: onToggle }}>
+      <div>{children}</div>
+    </AccordionContext.Provider>
+  )
+}
+
+// Usage
+const App = () => {
+  const [openIndex, setOpenIndex] = useState(null)
+
+  return (
+    <Accordion openIndex={openIndex} onToggle={setOpenIndex}>
+      <AccordionItem index={0}>
+        <AccordionHeader>Header 1</AccordionHeader>
+        <AccordionPanel>Content 1</AccordionPanel>
+      </AccordionItem>
+      <AccordionItem index={1}>
+        <AccordionHeader>Header 2</AccordionHeader>
+        <AccordionPanel>Content 2</AccordionPanel>
+      </AccordionItem>
+      <AccordionItem index={2}>
+        <AccordionHeader>Header 3</AccordionHeader>
+        <AccordionPanel>Content 3</AccordionPanel>
+      </AccordionItem>
+    </Accordion>
+  )
+}
+```
+
+## Nested Compound Components
+
+You can also nest compound components to create more complex UIs. For example, you could create a nested accordion:
+
+```jsx
+const NestedAccordion = () => (
+  <Accordion>
+    <AccordionItem index={0}>
+      <AccordionHeader>Header 1</AccordionHeader>
+      <AccordionPanel>
+        <Accordion>
+          <AccordionItem index={0}>
+            <AccordionHeader>Nested Header 1</AccordionHeader>
+            <AccordionPanel>Nested Content 1</AccordionPanel>
+          </AccordionItem>
+          <AccordionItem index={1}>
+            <AccordionHeader>Nested Header 2</AccordionHeader>
+            <AccordionPanel>Nested Content 2</AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+      </AccordionPanel>
+    </AccordionItem>
+    <AccordionItem index={1}>
+      <AccordionHeader>Header 2</AccordionHeader>
+      <AccordionPanel>Content 2</AccordionPanel>
+    </AccordionItem>
+  </Accordion>
+)
+```
+
+# Benefits of Compound Components
+
+## Flexibility
+
+Compound components allow you to compose your components in various ways without changing their internal implementation. This makes it easy to extend and modify your components as your application's requirements change.
+
+## Separation of Concerns
+
+Each part of the compound component handles a specific piece of functionality, making the code easier to manage and understand. This separation allows you to focus on individual parts without worrying about the entire component's complexity.
+
+## Reusability
+
+You can reuse the individual parts of the compound component in different contexts, increasing the overall reusability of your code. This reduces duplication and makes your codebase more maintainable.
+
+## Improved State Management
+
+By using context, compound components can manage state in a more localized and efficient manner. This avoids the need for prop drilling and makes it easier to handle complex state interactions.
+
+## Conclusion
+
+Compound components are a great way to build flexible and reusable UI components in React. By leveraging context and composition, you can create components that are easy to use and maintain. They provide a clean and intuitive API, improve the separation of concerns, and enhance the reusability of your code.
+
+Whether you're building simple components like an accordion or more complex UIs, the compound component pattern can help you manage state and behavior effectively. Try using this pattern in your next project to see how it can improve your codebase!
+
+I hope this helps you understand compound components better. Happy coding! 🚀

@@ -54,7 +54,7 @@ export const work = [
     title: "Streak",
     position: "Senior Software Developer",
     description:
-      "Streak empowers retail trading community by democratising privileged trading technology.With Streak, retail traders can create, backtest and deploy trading strategies live in the stock markets without having to code.",
+      "Streak empowers retail trading community by democratising privileged trading technology. With Streak, retail traders can create, backtest and deploy trading strategies live in the stock markets.",
     image: "/work/streak.png",
     url: "https://streak.tech",
     joined: "April 2021",

@@ -8,11 +8,11 @@ function page() {
   return (
     <main className="flex min-h-screen flex-row items-start p-10 gap-10">
       <div className="flex flex-1 flex-col items-start gap-10">
-        <div className="w-full flex flex-col gap-6 md:h-[calc(40vh)] items-center justify-center">
-          <h2 className="font-display text-4xl md:text-6xl font-medium">
+        <div className="w-full flex flex-col gap-6 lg:h-[calc(40vh)] items-center justify-center">
+          <h2 className="font-display text-4xl lg:text-6xl font-medium">
             Blogs
           </h2>
-          <p className="font-normal text-lg md:text-2xl">
+          <p className="font-normal text-lg lg:text-2xl">
             Explore the world of React, React Native and everything in between.
           </p>
         </div>
@@ -23,13 +23,13 @@ function page() {
               <Link
                 href={slug}
                 key={slug}
-                className="flex flex-col gap-6 md:w-[30%]"
+                className="flex flex-col gap-6 lg:w-[30%]"
               >
                 <div className="relative w-full h-64 flex rounded-2xl overflow-hidden">
                   <Image src={image} alt="React" fill objectFit="cover" />
                 </div>
                 <div className="flex flex-col gap-4">
-                  <h2 className="text-lg md:text-xl font-bold">{title}</h2>
+                  <h2 className="text-lg lg:text-xl font-bold">{title}</h2>
                   <p className="line-clamp-3 text-sm">{description}</p>
                   <div className="flex flex-row gap-2 text-sm flex-wrap">
                     {tags.map(({ name: tag, color }) => (
