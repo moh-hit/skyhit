@@ -7,12 +7,12 @@ function Header() {
   return (
     <div className="flex items-center justify-end px-10 py-4">
       <Sheet>
-        <SheetTrigger asChild className="lg:hidden">
+        <SheetTrigger asChild className="md:hidden">
           <IconMenu2 className="h-8 w-8" />
         </SheetTrigger>
         <SheetContent>
           <div
-            className={`flex items-center gap-10 font-medium text-2xl lg:text-lg w-full flex-col mt-10 justify-end`}
+            className={`flex items-center gap-10 font-medium text-2xl xl:text-lg w-full flex-col mt-10 justify-end`}
           >
             <SheetClose asChild>
               <Link
@@ -51,7 +51,7 @@ function Header() {
           </div>
         </SheetContent>
       </Sheet>
-      <div className="items-center gap-10 font-medium text-2xl lg:text-lg hidden lg:flex">
+      <div className="items-center gap-10 font-medium text-2xl xl:text-lg hidden md:flex">
         <Link
           href="/"
           className="relative after:bg-black after:absolute after:h-0.5 after:rounded-lg after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer"

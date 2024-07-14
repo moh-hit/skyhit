@@ -75,16 +75,16 @@ function ExploreCards() {
   }
 
   return (
-    <div className="flex flex-1 flex-col lg:flex-row justify-between w-full h-full gap-10">
-      <div className="relative flex flex-1 p-6 w-full h-full rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between card min-h-72">
-        <h2 className="font-display text-5xl lg:text-4xl cardContent">
+    <div className="flex flex-1 flex-col md:flex-row md:flex-wrap justify-between w-full h-full gap-10">
+      <div className="relative flex flex-1 p-6 w-full h-full md:w-[45%] xl:w-full rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between card min-h-72">
+        <h2 className="font-display text-5xl xl:text-4xl cardContent">
           Explore my work
         </h2>
         <Link
           href="/work/zenduty"
           className="opacity-0 cardContent2 absolute top-6 left-6 rounded-2xl bg-background border-2 border-slate-200 flex flex-col gap-1 p-4 max-w-[83%] hover:bg-amber-50 hover:border-amber-200 hover:shadow-md hover:shadow-amber-100"
         >
-          <h2 className="font-display text-md lg:text-xl font-medium">
+          <h2 className="font-display text-md xl:text-xl font-medium">
             Currently working with{" "}
             <span className="text-amber-500 font-bold">Zenduty</span>
           </h2>
@@ -99,15 +99,15 @@ function ExploreCards() {
           Go to career
         </Button>
       </div>
-      <div className="relative flex flex-1 p-6 w-full h-full rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between card min-h-72">
-        <h2 className="font-display text-5xl lg:text-4xl cardContent">
+      <div className="relative flex flex-1 p-6 w-full h-full md:w-[45%] xl:w-full rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between card min-h-72">
+        <h2 className="font-display text-5xl xl:text-4xl cardContent">
           Read my blogs
         </h2>
         <Link
-          href="/blogs/how-does-compound-components-work"
+          href={blogs[0].slug}
           className="opacity-0 cardContent2 absolute top-6 left-6 rounded-2xl bg-background border-2 border-slate-200 flex flex-col gap-1 p-4 max-w-[83%] hover:bg-green-50 hover:border-green-200 hover:shadow-md hover:shadow-green-100"
         >
-          <h2 className="font-display text-md lg:text-xl font-medium">
+          <h2 className="font-display text-md xl:text-xl font-medium">
             Latest blog
           </h2>
           <h2 className="line-clamp-3">{blogs[0].title}</h2>
@@ -121,10 +121,10 @@ function ExploreCards() {
           Go to blogs
         </Button>
       </div>
-      <div className="flex flex-1 p-6 w-full h-full rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between min-h-72">
-        <h2 className="font-display text-5xl lg:text-4xl">
+      <div className="flex flex-1 p-6 w-full h-full md:w-[45%] xl:w-full rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between min-h-72">
+        <h2 className="font-display text-5xl xl:text-4xl">
           Checkout my app{" "}
-          <span className="text-indigo-600 text-xl lg:text-2xl">
+          <span className="text-indigo-600 text-xl xl:text-2xl">
             (Substrack)
           </span>
         </h2>
@@ -137,11 +137,11 @@ function ExploreCards() {
           Go to app
         </Button>
       </div>
-      <div className="flex flex-1 p-6 w-full h-full min-h-72 rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between">
-        <h2 className="font-display text-4xl lg:text-4xl">
+      <div className="flex flex-1 p-6 w-full h-full md:w-[45%] xl:w-full min-h-72 rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between">
+        <h2 className="font-display text-4xl xl:text-4xl">
           Find me on socials
         </h2>
-        <div className="flex flex-row flex-wrap w-full items-center gap-7">
+        <div className="flex flex-row flex-wrap w-full items-center gap-7 md:gap-3">
           {socials.map(({ name, href, icon: Icon, color, accent }) => (
             <TooltipProvider key={name}>
               <Tooltip>
@@ -152,7 +152,7 @@ function ExploreCards() {
                     rel="noreferrer"
                     className={`p-3 rounded-full  transition-colors hover:${accent}  duration-500`}
                   >
-                    <Icon className={`h-8 w-8 lg:h-8 lg:w-8 ${color}`} />
+                    <Icon className={`h-7 w-7 ${color}`} />
                   </a>
                 </TooltipTrigger>
                 <TooltipContent>

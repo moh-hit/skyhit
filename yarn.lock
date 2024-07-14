@@ -3749,7 +3749,7 @@ __metadata:
     acorn-jsx: ^5.0.0
     micromark-extension-mdx-expression: ^3.0.0
     micromark-extension-mdx-jsx: ^3.0.0
-    micromark-extension-mdx-lg: ^2.0.0
+    micromark-extension-mdx-xl: ^2.0.0
     micromark-extension-mdxjs-esm: ^3.0.0
     micromark-util-combine-extensions: ^2.0.0
     micromark-util-types: ^2.0.0

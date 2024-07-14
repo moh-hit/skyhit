@@ -25,31 +25,31 @@ import Image from "next/image"
 React Native has transformed the landscape of mobile app development, enabling developers to create cross-platform applications with ease. Now, with the introduction of Reanimated 2, we're witnessing a quantum leap in animation capabilities. In this comprehensive guide, we'll explore the power of Reanimated 2 and learn how to create fluid, high-performance animations that will take your React Native apps to the next level.
 
 <a name="introduction"></a>
-## 1. Introduction to Reanimated 2
+### 1. Introduction to Reanimated 2
 
 Reanimated 2 is not just an update; it's a complete overhaul of the original library. Designed with performance and developer experience in mind, it introduces a new declarative API and powerful concepts like worklets. These improvements allow for the creation of complex animations that run smoothly on the native thread, minimizing the overhead on the JavaScript thread.
 
 <a name="key-features"></a>
-## 2. Key Features and Improvements
+### 2. Key Features and Improvements
 
-### 2.1 New Declarative API
+#### 2.1 New Declarative API
 
 The new API in Reanimated 2 makes it easier than ever to create and manage animations. It provides a more intuitive way to define animated values and styles.
 
-### 2.2 Worklets
+#### 2.2 Worklets
 
 Worklets are small functions that can run on the UI thread, enabling smooth 60 FPS animations even during heavy JavaScript thread activity.
 
-### 2.3 Enhanced Performance
+#### 2.3 Enhanced Performance
 
 By running animations on the native thread, Reanimated 2 significantly reduces JavaScript bridge traffic, resulting in smoother animations and better overall app performance.
 
-### 2.4 Improved Gesture Handling
+#### 2.4 Improved Gesture Handling
 
 Integration with react-native-gesture-handler has been enhanced, allowing for more responsive and natural-feeling gesture-based animations.
 
 <a name="getting-started"></a>
-## 3. Getting Started
+### 3. Getting Started
 
 To begin using Reanimated 2 in your React Native project, you'll need to install it first:
 
@@ -74,7 +74,7 @@ module.exports = {
 
 <a name="basic-animations"></a>
 
-## 4. Basic Animations with Reanimated 2
+### 4. Basic Animations with Reanimated 2
 
 Let's start with a simple animation to demonstrate the new API:
 
@@ -128,9 +128,9 @@ IMAGE Here
 
 <a name="advanced-techniques"></a>
 
-## 5. Advanced Techniques
+### 5. Advanced Techniques
 
-### 5.1 Gesture Handling with Worklets
+#### 5.1 Gesture Handling with Worklets
 
 One of the most powerful features of Reanimated 2 is its ability to handle gestures smoothly using worklets. Here's an example of a draggable box:
 
@@ -195,7 +195,7 @@ This code creates a violet box that you can drag around the screen. When you rel
 IMAGE Here
 ```
 
-### 5.2 Interpolations and Derived Values
+#### 5.2 Interpolations and Derived Values
 
 Reanimated 2 provides powerful tools for creating complex animations through interpolations and derived values. Here's an example of a color-changing box based on its position:
 
@@ -263,7 +263,7 @@ IMAGE Here
 
 <a name="performance-optimization"></a>
 
-## 6. Performance Optimization
+### 6. Performance Optimization
 
 Reanimated 2 is designed with performance in mind, but there are still best practices to follow:
 
@@ -299,7 +299,7 @@ function EfficiencyExample() {
 
 <a name="real-world-examples"></a>
 
-## 7. Real-World Examples
+### 7. Real-World Examples
 
 Let's look at a more complex, real-world example: a scrollable carousel with parallax effect:
 
@@ -404,7 +404,7 @@ IMAGE Here
 
 <a name="troubleshooting"></a>
 
-## 8. Troubleshooting Common Issues
+### 8. Troubleshooting Common Issues
 
 When working with Reanimated 2, you might encounter some common issues:
 
@@ -413,7 +413,7 @@ When working with Reanimated 2, you might encounter some common issues:
 - **Unexpected animation behavior:** Double-check your use of `useSharedValue` and `useAnimatedStyle`. Ensure you're updating shared values correctly.
 - **Build errors:** Verify that you've added the Reanimated plugin to your `babel.config.js` and linked the library correctly.
 
-## Conclusion
+### Conclusion
 
 React Native Reanimated 2 is a game-changer for creating high-performance animations in React Native applications. Its new declarative API, combined with the power of worklets, opens up a world of possibilities for creating smooth, complex animations that run at 60 FPS, even on lower-end devices.
 

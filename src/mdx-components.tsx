@@ -22,12 +22,12 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <code className="text-sm font-mono bg-slate-100 p-1">{children}</code>
     ),
     pre: ({ children }) => (
-      <pre className="text-sm font-mono bg-slate-100 p-4 rounded-xl">
+      <pre className="text-sm font-mono bg-slate-100 p-4 rounded-xl text-wrap">
         {children}
       </pre>
     ),
     ol: ({ children }) => <ol className="ml-2">{children}</ol>,
-    ul: ({ children }) => <ul className="list-disc">{children}</ul>,
+    ul: ({ children }) => <ul className="ml-2">{children}</ul>,
     li: ({ children }) => <li className="my-2">{children}</li>,
     ...components,
   }

@@ -56,8 +56,7 @@ const config = {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        lg: "calc(var(--radius) - 2px)",
+        xl: "var(--radius)",
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
