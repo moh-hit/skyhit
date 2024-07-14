@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app"
 import { getFirestore } from "firebase/firestore"
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB06pTTlFz8Px03SQYtk-I7Q_MKx2y4vMU",
+  apiKey: process.env.FIREBASE_API_KEY,
   authDomain: "skyhit-portfolio.firebaseapp.com",
   projectId: "skyhit-portfolio",
   storageBucket: "skyhit-portfolio.appspot.com",
