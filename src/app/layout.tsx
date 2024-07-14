@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   title: "Mohit Kumar - Software Developer",
   description:
     "Mohit Kumar's personal website, a React Native, React and Nextjs developer. Have decent experience in golang and Nodejs as backend. Have worked in multiple domains like Fintech, Gaming, SaaS.",
+  openGraph: {
+    images: "/logo.png",
+  },
 }
 
 export default function RootLayout({
