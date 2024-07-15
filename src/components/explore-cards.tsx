@@ -32,14 +32,14 @@ const socials = [
   },
   {
     name: "Twitter",
-    href: "https://x.com/moh_itoo",
+    href: "https://x.com/mohitxnova",
     icon: IconBrandTwitter,
     color: "text-sky-600",
     accent: "bg-blue-50",
   },
   {
     name: "Instagram",
-    href: "https://www.instagram.com/_moh.itoo_",
+    href: "https://www.instagram.com/mohitxnova",
     icon: IconBrandInstagram,
     color: "text-pink-600",
     accent: "bg-blue-50",
