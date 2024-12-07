@@ -1,11 +1,12 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "React Native Reanimated 2",
+  title:
+    "Exploring the Latest React 19 Stable Release: What's New and Exciting",
   description:
-    "React Native Reanimated 2 is a powerful library that allows you to create high-performance animations and interactions in your React Native applications. This library is built on top of Reanimated and provides a simple and intuitive API for creating complex animations.",
+    "React, the popular JavaScript library for building user interfaces, has reached a significant milestone with the release of React 19. Officially released on December 5, 2024, this version brings a slew of exciting updates and improvements that aim to enhance the development experience and the performance of React applications. In this blog post, we'll dive into the key features and changes introduced in React 19.",
   openGraph: {
-    images: "/blogs/mastering-react-native-reanimated-2/cover.jpg",
+    images: "/blogs/exploring-the-latest-react-19/cover.jpg",
   },
 }
 
