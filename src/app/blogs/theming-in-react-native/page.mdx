@@ -1,0 +1,236 @@
+import Image from "next/image"
+
+# Implementing Custom Theming in a React Native App
+
+![theming-in-react-native](/blogs/theming-in-react-native/cover.jpg)
+
+<div className="flex justify-between items-end gap-10 border-b border-slate-200 pb-4">
+  <div className="flex items-center gap-2">
+    <div className="relative w-12 h-12 rounded-full overflow-hidden">
+      <Image
+        src="/authors/mohit.jpeg"
+        alt="Mohit Kumar"
+        fill
+        objectFit="cover"
+      />
+    </div>
+    <div className="flex flex-col">
+      <h2 className="font-bold">Mohit Kumar</h2>
+      <span className="text-sm text-green-500">5 min read</span>
+    </div>
+  </div>
+  <h2 className="font-mono font-medium text-sm">05 Dec 2024</h2>
+</div>
+
+In this post, we will explore how to implement custom theming in a React Native application using the Context API. Our goal is to create a flexible theming system without relying on any third-party packages. We'll cover everything from setting up the context to persisting the theme choice across app sessions.
+
+## Why Custom Theming?
+
+Custom theming allows us to define and apply different visual styles throughout an application. It enhances the user experience by providing a consistent look and feel and enables features like dark mode. Additionally, it helps in adhering to branding guidelines and can be used to improve accessibility.
+
+## Setting Up the Project
+
+To get started, let's set up a new React Native project. Open your terminal and run the necessary commands to initialize the project.
+
+## Creating the Theme Context
+
+First, we'll create a `ThemeContext` to provide theme-related data to our components. This involves creating a context that holds the current theme and a function to toggle the theme between light and dark modes. The context will be provided to the entire application using a `ThemeProvider` component.
+
+```jsx
+// theme-context.js
+import React, { createContext, useState, useEffect } from "react"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+
+export const ThemeContext = createContext()
+
+export const ThemeProvider = ({ children }) => {
+  const [theme, setTheme] = useState("light")
+
+  useEffect(() => {
+    const loadTheme = async () => {
+      const savedTheme = await AsyncStorage.getItem("theme")
+      if (savedTheme) {
+        setTheme(savedTheme)
+      }
+    }
+    loadTheme()
+  }, [])
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => {
+      const newTheme = prevTheme === "light" ? "dark" : "light"
+      AsyncStorage.setItem("theme", newTheme)
+      return newTheme
+    })
+  }
+
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  )
+}
+```
+
+## Defining Themes
+
+Next, we'll define the styles for our light and dark themes. Each theme will consist of a set of colors and styles that can be applied to various components in the application. For example, the light theme might use a white background with black text, while the dark theme uses a black background with white text.
+
+```js
+// themes.js
+export const lightTheme = {
+  backgroundColor: "#ffffff",
+  textColor: "#000000",
+}
+
+export const darkTheme = {
+  backgroundColor: "#000000",
+  textColor: "#ffffff",
+}
+```
+
+## Using the Theme Context in Components
+
+Now, we can use the `ThemeContext` in our components to apply the appropriate styles based on the current theme. By accessing the context values, components can dynamically adjust their styles to match the selected theme. This ensures a consistent look and feel throughout the application.
+
+```jsx
+// App.js
+import React, { useContext } from "react"
+import { View, Text, Button, StyleSheet } from "react-native"
+import { ThemeProvider, ThemeContext } from "./theme-context"
+import { lightTheme, darkTheme } from "./themes"
+
+const HomeScreen = () => {
+  const { theme, toggleTheme } = useContext(ThemeContext)
+  const currentTheme = theme === "light" ? lightTheme : darkTheme
+
+  return (
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: currentTheme.backgroundColor },
+      ]}
+    >
+      <Text style={{ color: currentTheme.textColor }}>
+        Hello, this is {theme} mode!
+      </Text>
+      <Button title="Toggle Theme" onPress={toggleTheme} />
+    </View>
+  )
+}
+
+const App = () => {
+  return (
+    <ThemeProvider>
+      <HomeScreen />
+    </ThemeProvider>
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+})
+
+export default App
+```
+
+## Persisting Theme Choice
+
+To ensure that the user's theme choice is remembered across app sessions, we can use AsyncStorage to save and retrieve the theme. This involves storing the current theme in AsyncStorage whenever it changes and loading the saved theme when the application starts. This way, the user's preference is preserved even if the app is closed and reopened.
+
+## Applying Themes to Complex Components
+
+Let's create a custom button component that adapts to the current theme. This involves using the theme context within the button component to apply the appropriate styles. The button should change its appearance based on the selected theme, providing a consistent user experience.
+
+```jsx
+// ThemedButton.js
+import React, { useContext } from "react"
+import { TouchableOpacity, Text, StyleSheet } from "react-native"
+import { ThemeContext } from "./theme-context"
+import { lightTheme, darkTheme } from "./themes"
+
+const ThemedButton = ({ title, onPress }) => {
+  const { theme } = useContext(ThemeContext)
+  const currentTheme = theme === "light" ? lightTheme : darkTheme
+
+  return (
+    <TouchableOpacity
+      style={[styles.button, { backgroundColor: currentTheme.backgroundColor }]}
+      onPress={onPress}
+    >
+      <Text style={{ color: currentTheme.textColor }}>{title}</Text>
+    </TouchableOpacity>
+  )
+}
+
+const styles = StyleSheet.create({
+  button: {
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    margin: 10,
+  },
+})
+
+export default ThemedButton
+```
+
+## Using the Themed Button in the App
+
+Finally, we can use our ThemedButton component in the HomeScreen component. By integrating the ThemedButton with the rest of the app, we can ensure that all components adhere to the selected theme, creating a cohesive visual experience.
+
+```jsx
+// App.js
+import React, { useContext } from "react"
+import { View, Text, StyleSheet } from "react-native"
+import { ThemeProvider, ThemeContext } from "./theme-context"
+import ThemedButton from "./ThemedButton"
+import { lightTheme, darkTheme } from "./themes"
+
+const HomeScreen = () => {
+  const { theme, toggleTheme } = useContext(ThemeContext)
+  const currentTheme = theme === "light" ? lightTheme : darkTheme
+
+  return (
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: currentTheme.backgroundColor },
+      ]}
+    >
+      <Text style={{ color: currentTheme.textColor }}>
+        Hello, this is {theme} mode!
+      </Text>
+      <ThemedButton title="Toggle Theme" onPress={toggleTheme} />
+    </View>
+  )
+}
+
+const App = () => {
+  return (
+    <ThemeProvider>
+      <HomeScreen />
+    </ThemeProvider>
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+})
+
+export default App
+```
+
+## Conclusion
+
+In this blog post, we've created a comprehensive custom theming system in React Native using the Context API. We covered setting up the context, defining themes, using themes in components, persisting the theme choice, and applying themes to complex components. By leveraging the Context API, we can easily manage and switch between different themes without relying on any external packages. This approach ensures that our application remains lightweight and customizable.
+
+Happy theming! 😎

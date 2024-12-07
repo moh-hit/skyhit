@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     "Compound components are a powerful pattern in React that allows you to create flexible and reusable UI components. This pattern can help you build more maintainable and scalable applications by separating concerns and providing a clean API for your components.",
   openGraph: {
-    images: "/blogs/compound-components/cover.png",
+    images: "/blogs/compound-components/cover.jpg",
   },
 }
 

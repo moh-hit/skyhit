@@ -17,46 +17,61 @@ function page() {
           </p>
         </div>
         <div className="flex gap-10 flex-wrap">
-          {blogs.map(({ title, author, description, image, slug, tags }) => {
-            const { name, image: authorImage } = author
-            return (
-              <Link
-                href={slug}
-                key={slug}
-                className="flex flex-col gap-6 xl:w-[30%]"
-              >
-                <div className="relative w-full h-64 flex rounded-2xl overflow-hidden">
-                  <Image src={image} alt="React" fill objectFit="cover" />
-                </div>
-                <div className="flex flex-col gap-4">
-                  <h2 className="text-lg xl:text-xl font-bold">{title}</h2>
-                  <p className="line-clamp-3 text-sm">{description}</p>
-                  <div className="flex flex-row gap-2 text-sm flex-wrap">
-                    {tags.map(({ name: tag, color }) => (
-                      <Badge
-                        variant="outline"
-                        key={tag}
-                        className={`font-medium ${color}`}
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="flex flex-row gap-2 items-center">
-                    <div className="relative w-8 h-8 rounded-full overflow-hidden">
-                      <Image
-                        src={authorImage}
-                        alt={name}
-                        fill
-                        objectFit="cover"
-                      />
+          {blogs
+            .sort((a, b) => b.createdAt - a.createdAt)
+            .map(
+              ({
+                title,
+                author,
+                description,
+                image,
+                slug,
+                tags,
+                createdAt,
+              }) => {
+                const { name, image: authorImage } = author
+                return (
+                  <Link
+                    href={slug}
+                    key={slug}
+                    className="flex flex-col gap-6 xl:w-[30%]"
+                  >
+                    <div className="relative w-full h-64 flex rounded-2xl overflow-hidden">
+                      <Image src={image} alt="React" fill objectFit="cover" />
+                      <div className="absolute top-3 right-3 text-xs bg-white px-2 py-1 rounded-full">
+                        {new Date(createdAt).toDateString()}
+                      </div>
                     </div>
-                    <span className="font-medium text-sm">By {name}</span>
-                  </div>
-                </div>
-              </Link>
-            )
-          })}
+                    <div className="flex flex-col gap-4">
+                      <h2 className="text-lg xl:text-xl font-bold">{title}</h2>
+                      <p className="line-clamp-3 text-sm">{description}</p>
+                      <div className="flex flex-row gap-2 text-sm flex-wrap">
+                        {tags.map(({ name: tag, color }) => (
+                          <Badge
+                            variant="outline"
+                            key={tag}
+                            className={`font-medium ${color}`}
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                      {/* <div className="flex flex-row gap-2 items-center">
+                        <div className="relative w-8 h-8 rounded-full overflow-hidden">
+                          <Image
+                            src={authorImage}
+                            alt={name}
+                            fill
+                            objectFit="cover"
+                          />
+                        </div>
+                        <span className="font-medium text-sm">By {name}</span>
+                      </div> */}
+                    </div>
+                  </Link>
+                )
+              }
+            )}
         </div>
       </div>
     </main>
