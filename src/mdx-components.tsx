@@ -29,7 +29,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ol: ({ children }) => <ol className="ml-2">{children}</ol>,
     ul: ({ children }) => <ul className="ml-2">{children}</ul>,
     li: ({ children }) => (
-      <li className="my-2 before:content-['•'] before:inline-block before:pr-2 before:text-slate-500 text-sm font-mono">
+      <li className="my-4 before:content-['•'] before:inline-block before:pr-2 before:text-slate-500 text-base">
         {children}
       </li>
     ),

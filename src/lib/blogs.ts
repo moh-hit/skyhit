@@ -3,7 +3,7 @@ export const blogs = [
     title: "Understanding Compound Components in React",
     author: {
       name: "Mohit Kumar",
-      image: "/authors/mohit.jpeg",
+      image: "/authors/mohit.jpg",
       slug: "/authors/mohit",
     },
     description:
@@ -23,7 +23,7 @@ export const blogs = [
     title: "Master animations in React Native with Reanimated 2",
     author: {
       name: "Mohit Kumar",
-      image: "/authors/mohit.jpeg",
+      image: "/authors/mohit.jpg",
       slug: "/authors/mohit",
     },
     description:
@@ -48,7 +48,7 @@ export const blogs = [
     title: "Implementing Custom Theming in a React Native App",
     author: {
       name: "Mohit Kumar",
-      image: "/authors/mohit.jpeg",
+      image: "/authors/mohit.jpg",
       slug: "/authors/mohit",
     },
     description:
@@ -78,7 +78,7 @@ export const blogs = [
     title: "Advanced Hooks Pattern and Techniques",
     author: {
       name: "Mohit Kumar",
-      image: "/authors/mohit.jpeg",
+      image: "/authors/mohit.jpg",
       slug: "/authors/mohit",
     },
     description:
@@ -98,5 +98,30 @@ export const blogs = [
       },
     ],
     createdAt: 1733566939000,
+  },
+  {
+    title: "Exploring the Latest React 19 ",
+    author: {
+      name: "Mohit Kumar",
+      image: "/authors/mohit.jpg",
+      slug: "/authors/mohit",
+    },
+    description:
+      "React, the popular JavaScript library for building user interfaces, has reached a significant milestone with the release of React 19. Officially released on December 5, 2024, this version brings a slew of exciting updates and improvements that aim to enhance the development experience and the performance of React applications. In this blog post, we'll dive into the key features and changes introduced in React 19.",
+    image: "/blogs/exploring-the-latest-react-19/cover.jpg",
+    slug: "/blogs/exploring-the-latest-react-19",
+    tags: [
+      {
+        name: "React",
+        slug: "/tags/react",
+        color: "text-violet-500",
+      },
+      {
+        name: "Version Release",
+        slug: "/tags/version-release",
+        color: "text-green-500",
+      },
+    ],
+    createdAt: 1733576845000,
   },
 ]

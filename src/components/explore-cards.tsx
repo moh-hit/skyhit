@@ -39,7 +39,7 @@ const socials = [
   },
   {
     name: "Instagram",
-    href: "https://www.instagram.com/mohitxnova",
+    href: "https://www.instagram.com/_moh.itoo_",
     icon: IconBrandInstagram,
     color: "text-pink-600",
     accent: "bg-blue-50",
@@ -104,13 +104,13 @@ function ExploreCards() {
           Read my blogs
         </h2>
         <Link
-          href={blogs[0].slug}
+          href={blogs[blogs.length - 1].slug}
           className="opacity-0 cardContent2 absolute top-6 left-6 rounded-2xl bg-background border-2 border-slate-200 flex flex-col gap-1 p-4 max-w-[83%] hover:bg-green-50 hover:border-green-200 hover:shadow-md hover:shadow-green-100"
         >
           <h2 className="font-display text-md xl:text-xl font-medium">
             Latest blog
           </h2>
-          <h2 className="line-clamp-3">{blogs[0].title}</h2>
+          <h2 className="line-clamp-3">{blogs[blogs.length - 1].title}</h2>
         </Link>
         <Button
           className="w-full rounded-xl text-md"
