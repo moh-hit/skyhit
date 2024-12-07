@@ -22,7 +22,16 @@ function page() {
         </div>
         <div className="flex gap-10 flex-wrap justify-center">
           {work.map(
-            ({ title, description, image, url, stack, position, slug }) => (
+            ({
+              title,
+              description,
+              image,
+              url,
+              stack,
+              position,
+              slug,
+              current,
+            }) => (
               <div
                 key={url}
                 className="flex flex-col gap-4 bg-background border-b-2 border-slate-200 py-6 w-full xl:h-[calc(40vh)] items-start xl:w-[45%] justify-between"
@@ -34,7 +43,12 @@ function page() {
                     </div>
                     <div className="flex flex-col">
                       <h2 className="font-display text-xl xl:text-2xl font-medium">
-                        {title}
+                        {title}{" "}
+                        {current && (
+                          <span className="text-green-500 text-xs font-mono">
+                            ( Current )
+                          </span>
+                        )}
                       </h2>
                       <span>{position}</span>
                     </div>

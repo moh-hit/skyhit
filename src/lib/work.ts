@@ -27,6 +27,7 @@ export const work = [
         accent: "text-green-600",
       },
     ],
+    current: true,
   },
   {
     title: "Fijit",
@@ -49,6 +50,7 @@ export const work = [
         accent: "text-green-600",
       },
     ],
+    current: false,
   },
   {
     title: "Streak",
@@ -86,10 +88,11 @@ export const work = [
         accent: "text-purple-600",
       },
     ],
+    current: false,
   },
   {
     title: "Propstory",
-    position: "Frontend Developer",
+    position: "Frontend Developer ( Intern )",
     description:
       "Leverage your digital assets to increase your marketing ROI. Accelerate prospective sales and leads digitally and increase your customer base.",
     image: "/work/propstory.png",
@@ -108,5 +111,6 @@ export const work = [
         accent: "text-yellow-600",
       },
     ],
+    current: false,
   },
 ]
