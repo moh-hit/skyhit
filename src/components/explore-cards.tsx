@@ -81,7 +81,7 @@ function ExploreCards() {
           Explore my work
         </h2>
         <Link
-          href="/work/zenduty"
+          href="/work"
           className="opacity-0 cardContent2 absolute top-6 left-6 rounded-2xl bg-background border-2 border-slate-200 flex flex-col gap-1 p-4 max-w-[83%] hover:bg-amber-50 hover:border-amber-200 hover:shadow-md hover:shadow-amber-100"
         >
           <h2 className="font-display text-md xl:text-xl font-medium">

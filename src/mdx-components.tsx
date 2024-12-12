@@ -1,5 +1,4 @@
 import type { MDXComponents } from "mdx/types"
-import Image, { ImageProps } from "next/image"
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -19,7 +18,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       </a>
     ),
     code: ({ children }) => (
-      <code className="text-sm font-mono bg-slate-100 p-1">{children}</code>
+      <code className="text-sm font-mono bg-slate-100">{children}</code>
     ),
     pre: ({ children }) => (
       <pre className="text-sm font-mono bg-slate-100 p-4 rounded-xl text-wrap">

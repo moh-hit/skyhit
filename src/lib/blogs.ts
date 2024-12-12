@@ -124,4 +124,29 @@ export const blogs = [
     ],
     createdAt: 1733576845000,
   },
+  {
+    title: "Using Native Code in React Native: A Beginner’s Guide",
+    author: {
+      name: "Mohit Kumar",
+      image: "/authors/mohit.jpg",
+      slug: "/authors/mohit",
+    },
+    description:
+      "Learn how to integrate custom native modules into your React Native app to unlock the full power of the platform.",
+    image: "/blogs/native-code-in-react-native/cover.jpg",
+    slug: "/blogs/native-code-in-react-native",
+    tags: [
+      {
+        name: "React Native",
+        slug: "/tags/react-native",
+        color: "text-blue-500",
+      },
+      {
+        name: "Native Code",
+        slug: "/tags/native-code",
+        color: "text-green-500",
+      },
+    ],
+    createdAt: 1734015497000,
+  },
 ]

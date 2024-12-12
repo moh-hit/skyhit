@@ -1,0 +1,245 @@
+import Image from "next/image"
+
+# Using Native Code in React Native: A Beginner’s Guide
+
+![native-code-in-react-native](/blogs/native-code-in-react-native/cover.jpg)
+
+<div className="flex justify-between items-end gap-10 border-b border-slate-200 pb-4">
+  <div className="flex items-center gap-2">
+    <div className="relative w-12 h-12 rounded-full overflow-hidden">
+      <Image
+        src="/authors/mohit.jpg"
+        alt="Mohit Kumar"
+        fill
+        objectFit="cover"
+      />
+    </div>
+    <div className="flex flex-col">
+      <h2 className="font-bold">Mohit Kumar</h2>
+      <span className="text-sm text-green-500">6 min read</span>
+    </div>
+  </div>
+  <h2 className="font-mono font-medium text-sm">12 Dec 2024</h2>
+</div>
+
+React Native provides an excellent bridge to use native code for functionality that isn't available via JavaScript. In this guide, we'll explore how to write and integrate native modules for Android and iOS, along with detailed insights into their working and best practices.
+
+## Why Use Native Code?
+
+While React Native covers most use cases, there are scenarios where you may need to write native code, such as:
+
+- **Accessing platform-specific APIs**: For example, interacting with low-level device hardware like Bluetooth or Camera APIs.
+- **Integrating third-party SDKs**: Many SDKs only provide native libraries.
+- **Performance optimizations**: Offloading intensive computations to native code for better performance.
+
+By bridging the gap between JavaScript and native languages, React Native enables developers to build truly hybrid apps that harness the best of both worlds.
+
+## How React Native's Bridge Works
+
+React Native operates through a bridge mechanism. This bridge facilitates communication between the JavaScript code and the native code. Here’s how it works:
+
+1. **JavaScript Layer**: Handles the UI logic and event handling.
+2. **Native Modules**: Perform platform-specific tasks.
+3. **Bridge**: Facilitates asynchronous communication between the two.
+
+This architecture ensures smooth integration but requires careful implementation to avoid performance bottlenecks.
+
+## Getting Started
+
+To demonstrate native module integration, we’ll build a module that provides a custom greeting message. This guide assumes you have:
+
+- A working React Native app (e.g., created using `npx react-native init`).
+- Basic knowledge of JavaScript, Java (for Android), and Objective-C/Swift (for iOS).
+
+### Adding a Native Module for Android
+
+#### Step 1: Create a Java Module
+
+Navigate to the `android` directory of your project, and create a Java class, e.g., `GreetingModule.java`, in the `com/{your_project_name}` package.
+
+```java
+package com.skyhit;
+
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.Promise;
+
+public class GreetingModule extends ReactContextBaseJavaModule {
+
+    GreetingModule(ReactApplicationContext context) {
+        super(context);
+    }
+
+    @Override
+    public String getName() {
+        return "GreetingModule";
+    }
+
+    @ReactMethod
+    public void getGreeting(String name, Promise promise) {
+        try {
+            String greeting = "Hello, " + name + "! Welcome to React Native.";
+            promise.resolve(greeting);
+        } catch (Exception e) {
+            promise.reject("Error", e);
+        }
+    }
+}
+```
+
+#### Step 2: Register the Module
+
+In the same package, create `GreetingPackage.java`.
+
+```java
+package com.skyhit;
+
+import com.facebook.react.ReactPackage;
+import com.facebook.react.bridge.NativeModule;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.uimanager.ViewManager;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class GreetingPackage implements ReactPackage {
+    @Override
+    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
+        List<NativeModule> modules = new ArrayList<>();
+        modules.add(new GreetingModule(reactContext));
+        return modules;
+    }
+
+    @Override
+    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
+        return Collections.emptyList();
+    }
+}
+```
+
+Next, update `MainApplication.java` to include the new package.
+
+```java
+import com.skyhit.GreetingPackage;
+
+@Override
+protected List<ReactPackage> getPackages() {
+    return Arrays.<ReactPackage>asList(
+        new MainReactPackage(),
+        new GreetingPackage()
+    );
+}
+```
+
+### Adding a Native Module for iOS
+
+#### Step 1: Create a Swift/Objective-C Module
+
+In the `ios` directory, create a new file `GreetingModule.m` or `GreetingModule.swift` in your Xcode project.
+
+**Objective-C Implementation**
+
+```objective-c
+#import <React/RCTBridgeModule.h>
+
+@interface RCTGreetingModule : NSObject <RCTBridgeModule>
+@end
+
+@implementation RCTGreetingModule
+
+RCT_EXPORT_MODULE();
+
+RCT_EXPORT_METHOD(getGreeting:(NSString *)name resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    NSString *greeting = [NSString stringWithFormat:@"Hello, %@! Welcome to React Native.", name];
+    resolve(greeting);
+}
+
+@end
+```
+
+**Swift Implementation**
+
+```swift
+import Foundation
+
+@objc(GreetingModule)
+class GreetingModule: NSObject {
+
+  @objc static func requiresMainQueueSetup() -> Bool {
+    return false
+  }
+
+  @objc func getGreeting(_ name: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+    let greeting = "Hello, \(name)! Welcome to React Native."
+    resolve(greeting)
+  }
+}
+```
+
+#### Step 2: Register the Module
+
+For Swift modules, ensure the bridging header (`Bridging-Header.h`) includes:
+
+```objective-c
+#import <React/RCTBridgeModule.h>
+```
+
+Check that your module is exposed in the Xcode project settings.
+
+### Using the Native Module in JavaScript
+
+1. Create a JavaScript file, e.g., `GreetingModule.js`.
+
+```javascript
+import { NativeModules } from "react-native"
+
+const { GreetingModule } = NativeModules
+
+export const getGreeting = async (name) => {
+  try {
+    const greeting = await GreetingModule.getGreeting(name)
+    return greeting
+  } catch (error) {
+    console.error(error)
+  }
+}
+```
+
+2. Use the module in your app.
+
+```javascript
+import React, { useState } from "react"
+import { View, Text, Button } from "react-native"
+import { getGreeting } from "./GreetingModule"
+
+const App = () => {
+  const [greeting, setGreeting] = useState("")
+
+  const fetchGreeting = async () => {
+    const result = await getGreeting("SKYHIT")
+    setGreeting(result)
+  }
+
+  return (
+    <View style={{ padding: 20 }}>
+      <Text>{greeting}</Text>
+      <Button title="Get Greeting" onPress={fetchGreeting} />
+    </View>
+  )
+}
+
+export default App
+```
+
+### Best Practices for Native Modules
+
+1. **Error Handling**: Ensure robust error handling to avoid app crashes.
+2. **Testing**: Test native modules thoroughly on both platforms.
+3. **Performance**: Optimize native code to minimize overhead.
+4. **Documentation**: Document your native module APIs clearly for your team.
+
+## Conclusion
+
+Native modules empower you to extend React Native's capabilities. By following this guide, you can start integrating custom native features into your apps. Experiment with more advanced functionalities and unlock the true potential of hybrid development!
