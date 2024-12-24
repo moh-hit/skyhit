@@ -149,4 +149,34 @@ export const blogs = [
     ],
     createdAt: 1734015497000,
   },
+  {
+    title: "Simplifying Side Effects: Dependencies in React's useEffect",
+    author: {
+      name: "Mohit Kumar",
+      image: "/authors/mohit.jpg",
+      slug: "/authors/mohit",
+    },
+    description:
+      "Dive into the nuances of managing dependencies in React's useEffect hook. This detailed guide uncovers common challenges, solutions, and practical techniques to write cleaner and more efficient side effects in your React applications.",
+    image: "/blogs/simplifying-side-effects-useeffect-dependencies/cover.jpg",
+    slug: "/blogs/simplifying-side-effects-useeffect-dependencies",
+    tags: [
+      {
+        name: "React",
+        slug: "/tags/react",
+        color: "text-violet-500",
+      },
+      {
+        name: "Hooks",
+        slug: "/tags/hooks",
+        color: "text-blue-500",
+      },
+      {
+        name: "useEffect",
+        slug: "/tags/useeffect",
+        color: "text-purple-500",
+      },
+    ],
+    createdAt: 1735061913000,
+  },
 ]

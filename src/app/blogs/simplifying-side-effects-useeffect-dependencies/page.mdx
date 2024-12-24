@@ -1,0 +1,297 @@
+import Image from "next/image"
+
+# Simplifying Side Effects: Dependencies in React's useEffect
+
+![simplifying-side-effects-useeffect-dependencies](/blogs/simplifying-side-effects-useeffect-dependencies/cover.jpg)
+
+<div className="flex justify-between items-end gap-10 border-b border-slate-200 pb-4">
+  <div className="flex items-center gap-2">
+    <div className="relative w-12 h-12 rounded-full overflow-hidden">
+      <Image
+        src="/authors/mohit.jpg"
+        alt="Mohit Kumar"
+        fill
+        objectFit="cover"
+      />
+    </div>
+    <div className="flex flex-col">
+      <h2 className="font-bold">Mohit Kumar</h2>
+      <span className="text-sm text-green-500">5 min read</span>
+    </div>
+  </div>
+  <h2 className="font-mono font-medium text-sm">24 Dec 2024</h2>
+</div>
+
+# Understanding Complexity in Managing Dependencies in useEffect
+
+`useEffect` is one of the most commonly used hooks in React. It allows you to perform side effects in functional components, such as fetching data, updating the DOM, or subscribing to events. While it's powerful, managing dependencies in `useEffect` can be tricky and often leads to unexpected bugs if not handled carefully. In this blog, we'll explore the common challenges and best practices for managing dependencies in `useEffect`.
+
+---
+
+## The Dependency Array: What It Does
+
+The dependency array is the second parameter of the `useEffect` hook. It tells React to re-run the effect whenever one of the specified dependencies changes. For example:
+
+```jsx
+useEffect(() => {
+  console.log("Effect runs")
+}, [dependency])
+```
+
+If `dependency` changes, the effect will run again. Leaving the dependency array empty (`[]`) means the effect runs only once when the component mounts.
+
+---
+
+## Common Challenges with Dependencies
+
+### 1. **Unintended Re-Renders**
+
+One common pitfall is adding variables to the dependency array that change frequently, causing the effect to re-run unnecessarily. This can lead to performance issues or infinite loops.
+
+#### Example:
+
+Suppose you have the following code:
+
+```jsx
+useEffect(() => {
+  console.log("Effect runs")
+}, [count])
+```
+
+If `count` updates frequently (e.g., in response to user actions), the effect will re-run each time, potentially causing performance degradation.
+
+#### Solution:
+
+To mitigate this, ensure only essential dependencies are included and avoid using state variables that update too frequently unless absolutely necessary.
+
+---
+
+### 2. **Stale Closures**
+
+When using functions or variables inside `useEffect` that are defined outside of it, you may encounter stale closures. This happens because `useEffect` captures the value of those variables at the time of its execution.
+
+#### Example:
+
+```jsx
+const [count, setCount] = useState(0)
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    console.log(count) // Stale value
+  }, 1000)
+  return () => clearInterval(interval)
+}, []) // Missing `count` as a dependency
+```
+
+#### Why It Happens:
+
+In the above code, the value of `count` inside the `setInterval` callback is always the initial value (`0`). This occurs because `useEffect` does not re-run unless `count` is added to the dependency array.
+
+#### Solution:
+
+Add `count` to the dependency array or use a `ref` to access the latest value without re-triggering the effect:
+
+```jsx
+useEffect(() => {
+  const interval = setInterval(() => {
+    setCount((prev) => prev + 1)
+  }, 1000)
+  return () => clearInterval(interval)
+}, [])
+```
+
+---
+
+### 3. **Circular Dependencies**
+
+When an effect updates a dependency that it listens to, it can create a circular dependency and cause an infinite loop.
+
+#### Example:
+
+```jsx
+useEffect(() => {
+  setValue(value + 1) // Updates `value`
+}, [value]) // Depends on `value`
+```
+
+#### Why It Happens:
+
+Here, `value` updates cause the effect to re-run, which updates `value` again, leading to an infinite loop.
+
+#### Solution:
+
+Use a `useReducer` to handle complex state updates, or conditionally update the state inside the effect to break the cycle.
+
+---
+
+### 4. **Complex Dependencies**
+
+If your effect depends on a derived value (e.g., computed from multiple states or props), managing those dependencies can become complex and error-prone.
+
+#### Example:
+
+```jsx
+const derivedValue = a + b
+useEffect(() => {
+  console.log(derivedValue)
+}, [a, b]) // Derived value split into individual dependencies
+```
+
+#### Solution:
+
+Memoize the derived value using `useMemo` to simplify the dependency array:
+
+```jsx
+const derivedValue = useMemo(() => a + b, [a, b])
+useEffect(() => {
+  console.log(derivedValue)
+}, [derivedValue])
+```
+
+---
+
+## Best Practices for Managing Dependencies
+
+### 1. **Use `useCallback` and `useMemo`**
+
+Wrap functions and computed values in `useCallback` and `useMemo` to ensure their references remain stable.
+
+#### Example:
+
+```jsx
+const memoizedCallback = useCallback(() => {
+  console.log("Callback runs")
+}, [dependency])
+
+useEffect(() => {
+  memoizedCallback()
+}, [memoizedCallback])
+```
+
+---
+
+### 2. **Refactor Complex Logic**
+
+Move complex logic outside the `useEffect` to simplify dependency management.
+
+#### Example:
+
+```jsx
+const computeDerivedValue = useMemo(() => a + b, [a, b])
+useEffect(() => {
+  console.log(computeDerivedValue)
+}, [computeDerivedValue])
+```
+
+---
+
+### 3. **Use Reducers for State Updates**
+
+For state updates based on previous state, consider using `useReducer` instead of `useEffect` to avoid circular dependencies.
+
+#### Example:
+
+```jsx
+const [state, dispatch] = useReducer(reducer, initialState)
+
+useEffect(() => {
+  dispatch({ type: "update", payload: value })
+}, [value])
+```
+
+---
+
+### 4. **Use ESLint Rules for Dependencies**
+
+Enable `eslint-plugin-react-hooks` to automatically detect missing or incorrect dependencies in your `useEffect` hooks.
+
+#### Example Configuration:
+
+```json
+{
+  "rules": {
+    "react-hooks/exhaustive-deps": "warn"
+  }
+}
+```
+
+---
+
+### 5. **Use Refs for Non-Triggering Variables**
+
+If you need to use a variable in `useEffect` but don't want it to trigger the effect, use a `ref`.
+
+#### Example:
+
+```jsx
+const countRef = useRef(count)
+useEffect(() => {
+  countRef.current = count
+}, [count])
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    console.log(countRef.current)
+  }, 1000)
+  return () => clearInterval(interval)
+}, [])
+```
+
+---
+
+## Real-World Use Cases
+
+### Fetching Data with Dynamic Filters
+
+Suppose you have a search bar that updates results dynamically as the user types:
+
+#### Example:
+
+```jsx
+const [query, setQuery] = useState("")
+const [results, setResults] = useState([])
+
+useEffect(() => {
+  const fetchResults = async () => {
+    const response = await fetch(`/api/search?q=${query}`)
+    const data = await response.json()
+    setResults(data)
+  }
+
+  if (query) fetchResults()
+}, [query])
+```
+
+---
+
+### Debouncing Expensive API Calls
+
+To optimize API calls, you can debounce updates to the query string:
+
+#### Example:
+
+```jsx
+const [query, setQuery] = useState("")
+const [debouncedQuery, setDebouncedQuery] = useState(query)
+
+useEffect(() => {
+  const handler = setTimeout(() => setDebouncedQuery(query), 500)
+  return () => clearTimeout(handler)
+}, [query])
+
+useEffect(() => {
+  if (debouncedQuery) {
+    fetch(`/api/search?q=${debouncedQuery}`)
+  }
+}, [debouncedQuery])
+```
+
+---
+
+## Conclusion
+
+Managing dependencies in `useEffect` can be challenging, but understanding how it works and following best practices can help you write more predictable and efficient React components. Use tools like `useCallback`, `useMemo`, and ESLint rules to avoid common pitfalls, and always test your effects thoroughly to ensure they behave as expected.
+
+With proper understanding and thoughtful implementation, `useEffect` becomes a reliable ally in handling side effects in your React applications.
+
+Happy lifecycling! ♻
