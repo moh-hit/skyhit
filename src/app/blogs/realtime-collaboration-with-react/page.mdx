@@ -1,0 +1,230 @@
+import Image from "next/image"
+
+# Realtime Collaboration with React
+
+![realtime-collaboration-with-react](/blogs/realtime-collaboration-with-react/cover.jpg)
+
+<div className="flex justify-between items-end gap-10 border-b border-slate-200 pb-4">
+  <div className="flex items-center gap-2">
+    <div className="relative w-12 h-12 rounded-full overflow-hidden">
+      <Image
+        src="/authors/mohit.jpg"
+        alt="Mohit Kumar"
+        fill
+        objectFit="cover"
+      />
+    </div>
+    <div className="flex flex-col">
+      <h2 className="font-bold">Mohit Kumar</h2>
+      <span className="text-sm text-green-500">6 min read</span>
+    </div>
+  </div>
+  <h2 className="font-mono font-medium text-sm">19 Jan 2025</h2>
+</div>
+
+Building real-time collaboration features in applications like shared documents, whiteboards, or chat rooms is a fascinating challenge. React, with its component-driven architecture, makes it easier to create these dynamic features. In this blog, we’ll explore how to implement real-time collaboration in a React app using **WebSockets**, **WebRTC**, and state synchronization tools like **Yjs**.
+
+## Why Realtime Collaboration?
+
+Real-time collaboration enhances user experience by allowing multiple users to interact with shared data or interfaces simultaneously. For example:
+
+- **Google Docs**: Multiple users editing a document in real time.
+- **Figma**: Designing collaboratively on the same canvas.
+- **Slack**: Live chat and notifications.
+- **Miro**: Collaborative whiteboarding for teams.
+- **Trello**: Real-time updates on task boards.
+
+These features not only improve productivity but also provide users with a seamless and engaging experience.
+
+## Tools for Realtime Collaboration
+
+1. **WebSockets**: For real-time bidirectional communication.
+2. **WebRTC**: For peer-to-peer data exchange (e.g., video, audio, or data streams).
+3. **State Synchronization Libraries**: Tools like [Yjs](https://yjs.dev/) or [Automerge](https://automerge.org/) handle concurrent updates.
+4. **Firebase Realtime Database**: A backend-as-a-service option for real-time synchronization.
+5. **GraphQL Subscriptions**: For real-time data updates over GraphQL.
+
+---
+
+## Setting Up Realtime Collaboration with WebSockets
+
+### **Step 1: Backend Setup with WebSocket Server**
+
+Use **Node.js** with the `ws` library to create a WebSocket server.
+
+```javascript
+// server.js
+const WebSocket = require("ws")
+const wss = new WebSocket.Server({ port: 8080 })
+
+wss.on("connection", (ws) => {
+  console.log("A client connected")
+
+  ws.on("message", (message) => {
+    console.log(`Received: ${message}`)
+    // Broadcast message to all connected clients
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(message)
+      }
+    })
+  })
+
+  ws.on("close", () => console.log("A client disconnected"))
+})
+```
+
+In this code, we define a WebSocket server that listens for connections on port 8080. When a client connects, the server logs the event and waits for messages from the client. Any received message is then broadcast to all connected clients using `wss.clients.forEach`, ensuring that every participant is updated in real time.
+
+### **Step 2: React Frontend for WebSocket Communication**
+
+Create a simple React app to send and receive messages.
+
+```javascript
+// App.js
+import React, { useState, useEffect, useRef } from "react"
+
+const App = () => {
+  const [messages, setMessages] = useState([])
+  const [input, setInput] = useState("")
+  const ws = useRef(null)
+
+  useEffect(() => {
+    ws.current = new WebSocket("ws://localhost:8080")
+
+    ws.current.onmessage = (event) => {
+      setMessages((prev) => [...prev, event.data])
+    }
+
+    return () => ws.current.close()
+  }, [])
+
+  const sendMessage = () => {
+    if (input) {
+      ws.current.send(input)
+      setInput("")
+    }
+  }
+
+  return (
+    <div>
+      <h1>Realtime Chat</h1>
+      <div>
+        {messages.map((msg, index) => (
+          <p key={index}>{msg}</p>
+        ))}
+      </div>
+      <input
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Type a message"
+      />
+      <button onClick={sendMessage}>Send</button>
+    </div>
+  )
+}
+
+export default App
+```
+
+Here, the React app establishes a WebSocket connection when the component mounts. It listens for incoming messages and updates the `messages` state, displaying them dynamically in the UI. The `sendMessage` function allows users to send text, which is transmitted to the server and subsequently broadcast to other clients. This creates a fully functional chat interface for testing real-time communication.
+
+### **Use Case: Live Chat Application**
+
+This implementation enables multiple users to join a chat room and exchange messages in real-time. The architecture supports additional enhancements, such as typing indicators or read receipts, by broadcasting specialized events.
+
+---
+
+## Enhancing Collaboration with Yjs
+
+### **What is Yjs?**
+
+Yjs is a CRDT (Conflict-free Replicated Data Type) library that helps synchronize shared states across clients. It handles conflicts automatically and ensures data consistency.
+
+### **Use Cases for Yjs**
+
+- Collaborative text editors (e.g., a simplified Google Docs).
+- Shared whiteboards for brainstorming.
+- Real-time multiplayer games with shared states.
+
+### **Step 1: Setting Up Yjs**
+
+Install Yjs and its WebSocket provider:
+
+```bash
+npm install yjs y-websocket
+```
+
+### **Step 2: Integrate Yjs with React**
+
+```javascript
+import React, { useEffect, useState } from "react"
+import * as Y from "yjs"
+import { WebsocketProvider } from "y-websocket"
+
+const CollaborativeText = () => {
+  const [text, setText] = useState("")
+
+  useEffect(() => {
+    const ydoc = new Y.Doc()
+    const provider = new WebsocketProvider(
+      "ws://localhost:1234",
+      "my-room",
+      ydoc
+    )
+
+    const yText = ydoc.getText("shared-text")
+
+    yText.observe(() => {
+      setText(yText.toString())
+    })
+
+    return () => provider.disconnect()
+  }, [])
+
+  const handleChange = (e) => {
+    const ydoc = new Y.Doc()
+    const yText = ydoc.getText("shared-text")
+    yText.delete(0, yText.length)
+    yText.insert(0, e.target.value)
+  }
+
+  return <textarea value={text} onChange={handleChange} />
+}
+
+export default CollaborativeText
+```
+
+This React component demonstrates how Yjs can be used to synchronize text across multiple clients. A Yjs document is created and connected to a WebSocket room via `WebsocketProvider`. The shared text is observed for changes, and updates are reflected in the component state. Users can edit the text area, with changes propagating in real-time to other clients in the same room. This setup also ensures conflict resolution and seamless offline-to-online transitions.
+
+### **Demo Outcome**
+
+As a result, users connected to the same room can edit text collaboratively and see updates in real-time. Even when users go offline and reconnect later, changes are synchronized automatically.
+
+---
+
+## Advanced Use Cases
+
+### **Collaborative Whiteboarding**
+
+Using tools like Fabric.js or Konva.js with Yjs enables teams to draw, annotate, and edit shapes collaboratively. Each change is synchronized in real-time, allowing seamless multi-user interaction. Features like role-based access (e.g., viewer vs. editor) can further enhance this experience.
+
+### **Realtime Multiplayer Games**
+
+By synchronizing the game state (e.g., player positions, scores) with Yjs, developers can create engaging multiplayer experiences. For faster peer-to-peer interactions, WebRTC can complement this setup.
+
+### **Real-Time Dashboards**
+
+Dashboards streaming live data, such as stock prices or server metrics, benefit from WebSockets or GraphQL subscriptions for pushing updates to users. This ensures that teams are always viewing the latest information.
+
+### **Video Conferencing with Shared Features**
+
+Integrating WebRTC for video/audio streams alongside WebSockets for shared features like collaborative notes, screen sharing, or polling creates a robust video conferencing solution. This hybrid approach offers real-time interactions with additional collaborative capabilities.
+
+---
+
+## Conclusion
+
+By combining WebSockets, WebRTC, or libraries like Yjs, you can build powerful real-time collaborative applications with React. From simple chat applications to complex collaborative tools like shared whiteboards or multiplayer games, React’s flexibility makes it an excellent choice for creating interactive, real-time experiences.
+
+Happy collaborating⚔️

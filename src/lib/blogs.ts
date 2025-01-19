@@ -179,4 +179,34 @@ export const blogs = [
     ],
     createdAt: 1735061913000,
   },
+  {
+    title: "Realtime Collaboration with React",
+    description:
+      "A comprehensive guide on building real-time collaborative applications with React using tools like WebSockets and WebRTC.",
+    author: {
+      name: "Mohit Kumar",
+      image: "/authors/mohit.jpg",
+      slug: "/authors/mohit",
+    },
+    image: "/blogs/realtime-collaboration-with-react/cover.jpg",
+    slug: "/blogs/realtime-collaboration-with-react",
+    tags: [
+      {
+        name: "React",
+        slug: "/tags/react",
+        color: "text-violet-500",
+      },
+      {
+        name: "WASM",
+        slug: "/tags/wasm",
+        color: "text-green-500",
+      },
+      {
+        name: "WebRTC",
+        slug: "/tags/webrtc",
+        color: "text-red-500",
+      },
+    ],
+    createdAt: 1737276629000,
+  },
 ]
