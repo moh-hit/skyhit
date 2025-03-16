@@ -3,6 +3,8 @@
 import {
   IconArrowRight,
   IconBlockquote,
+  IconBrandApple,
+  IconBrandAppleFilled,
   IconBrandDiscord,
   IconBrandGithub,
   IconBrandGooglePlay,
@@ -71,6 +73,13 @@ function ExploreCards() {
   const router = useRouter()
 
   const onGoToPage = (page: string) => () => {
+    if (page === "app") {
+      window.open(
+        "https://apps.apple.com/us/app/subxtract/id6743356978",
+        "_blank"
+      )
+      return
+    }
     router.push(`/${page}`)
   }
 
@@ -125,17 +134,16 @@ function ExploreCards() {
         <h2 className="font-display text-5xl xl:text-4xl">
           Checkout my app{" "}
           <span className="text-indigo-600 text-xl xl:text-2xl">
-            (Substrack)
+            (SubXtract)
           </span>
         </h2>
         <Button
           className="w-full rounded-xl text-md"
           variant="outline"
           onClick={onGoToPage("app")}
-          disabled
         >
-          <IconDeviceMobile className="h-5 w-5 text-indigo-600 mr-2" />
-          Coming Soon
+          <IconBrandAppleFilled className="h-5 w-5 text-indigo-600 mr-2" />
+          App Store
         </Button>
       </div>
       <div className="flex flex-1 p-6 w-full h-full md:w-[45%] xl:w-full min-h-72 rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between">
