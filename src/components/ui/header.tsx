@@ -40,6 +40,15 @@ function Header() {
             </SheetClose>
             <SheetClose asChild>
               <Link
+                href="/subxtract/privacy-policy"
+                className="relative after:bg-black after:absolute after:h-0.5 after:rounded-lg after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer flex items-center gap-1"
+                target="_blank"
+              >
+                Privacy Policy (Subxtract)
+              </Link>
+            </SheetClose>
+            <SheetClose asChild>
+              <Link
                 href="/resume.pdf"
                 className="relative after:bg-black after:absolute after:h-0.5 after:rounded-lg after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer flex items-center gap-1"
                 target="_blank"
@@ -69,6 +78,13 @@ function Header() {
           className="relative after:bg-black after:absolute after:h-0.5 after:rounded-lg after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer"
         >
           Blogs
+        </Link>
+        <Link
+          href="/subxtract/privacy-policy"
+          className="relative after:bg-black after:absolute after:h-0.5 after:rounded-lg after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer flex items-center gap-1"
+          target="_blank"
+        >
+          Privacy Policy (Subxtract)
         </Link>
         <Link
           href="/resume.pdf"
