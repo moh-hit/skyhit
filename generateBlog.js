@@ -70,9 +70,13 @@ async function createBlog() {
 
   // Update the blogs array
   const updatedBlogs = blogsData.replace(
-    /(\[.*?])/s,
-    (match) =>
-      `${match.slice(0, -1)},\n  ${JSON.stringify(newBlog, null, 2)}\n]`
+    /(export const blogs = \[)([\s\S]*?)(\])/,
+    (match, start, middle, end) =>
+      `${start}${middle.trim() ? middle.trim() + "," : ""}\n  ${JSON.stringify(
+        newBlog,
+        null,
+        2
+      )}\n${end}`
   )
 
   // Write the updated content back to blogs.ts
@@ -81,6 +85,17 @@ async function createBlog() {
   // Create the new folder and files
   const blogFolderPath = path.join(__dirname, "src/app/blogs", answers.slug)
   fs.mkdirSync(blogFolderPath, { recursive: true })
+
+  // Create the public folder for the cover image
+  const publicImagePath = path.join(__dirname, "public/blogs", answers.slug)
+  fs.mkdirSync(publicImagePath, { recursive: true })
+
+  // Get the current date in a readable format
+  const currentDate = new Date().toLocaleDateString("en-US", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  })
 
   // Create page.mdx and layout.tsx files
   const pageMdxContent = `import Image from "next/image"
@@ -104,7 +119,7 @@ async function createBlog() {
       <span className="text-sm text-green-500">6 min read</span>
     </div>
   </div>
-  <h2 className="font-mono font-medium text-sm">19 Jan 2025</h2>
+  <h2 className="font-mono font-medium text-sm">${currentDate}</h2>
 </div>
 
 ${answers.description}
@@ -141,8 +156,8 @@ export default function MdxLayout({ children }: { children: React.ReactNode }) {
     "utf-8"
   )
 
-  // Create the cover image placeholder (you can replace it with your actual image)
-  fs.writeFileSync(path.join(blogFolderPath, "cover.jpg"), "", "utf-8") // Empty placeholder file
+  // Create the cover image placeholder in the public folder
+  fs.writeFileSync(path.join(publicImagePath, "cover.jpg"), "", "utf-8") // Empty placeholder file
 }
 
 // Function to get a random color from the list

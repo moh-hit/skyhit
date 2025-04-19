@@ -137,14 +137,24 @@ function ExploreCards() {
             (SubXtract)
           </span>
         </h2>
-        <Button
-          className="w-full rounded-xl text-md"
-          variant="outline"
-          onClick={onGoToPage("app")}
-        >
-          <IconBrandAppleFilled className="h-5 w-5 text-indigo-600 mr-2" />
-          App Store
-        </Button>
+        <div className="flex flex-col gap-4">
+          <Button
+            className="w-full rounded-xl text-md"
+            variant="outline"
+            onClick={onGoToPage("app")}
+          >
+            <IconBrandAppleFilled className="h-5 w-5 text-indigo-600 mr-2" />
+            App Store
+          </Button>
+          <Button
+            className="w-full rounded-xl text-md"
+            variant="outline"
+            onClick={onGoToPage("blogs/subxtract")}
+          >
+            <IconBlockquote className="h-5 w-5 text-green-600 mr-2" />
+            Read More
+          </Button>
+        </div>
       </div>
       <div className="flex flex-1 p-6 w-full h-full md:w-[45%] xl:w-full min-h-72 rounded-3xl bg-background border-2 border-slate-200 flex-col gap-4 justify-between">
         <h2 className="font-display text-4xl xl:text-4xl">

@@ -1,0 +1,211 @@
+import Image from "next/image"
+
+# 📱 SubXtract: A Clean and Offline-First Subscription Tracker Built with Expo
+
+![SubXtract](/blogs/subxtract/cover.jpg)
+
+<div className="flex justify-between items-end gap-10 border-b border-slate-200 pb-4">
+  <div className="flex items-center gap-2">
+    <div className="relative w-12 h-12 rounded-full overflow-hidden">
+      <Image
+        src="/authors/mohit.jpg"
+        alt="Mohit Kumar"
+        fill
+        objectFit="cover"
+      />
+    </div>
+    <div className="flex flex-col">
+      <h2 className="font-bold">Mohit Kumar</h2>
+      <span className="text-sm text-green-500">6 min read</span>
+    </div>
+  </div>
+  <h2 className="font-mono font-medium text-sm">Apr 19, 2025</h2>
+</div>
+
+Managing your monthly subscriptions shouldn’t be a mess of reminders and scattered notes. That's the idea behind **SubXtract** — a thoughtfully designed subscription tracking app that helps users keep track of their recurring expenses in one simple place.
+
+But behind the clean UI and user-friendly design lies a robust offline-first tech stack, built to ensure performance, reliability, and a delightful experience even without internet.
+
+In this post, I’ll walk you through **what SubXtract is**, **what tech powers it**, and **how I implemented key features using Expo, Zustand, MMKV, and Reanimated**.
+
+---
+
+## 🧹 What is SubXtract?
+
+**SubXtract** helps users:
+
+- Track recurring subscriptions like Netflix, Spotify, Rent, etc.
+- Add billing details like start date, cycle (monthly, yearly, etc.), and custom notes
+- Set preferred currency and theme
+- Toggle auto-renew status
+- Archive old/canceled subscriptions
+- Get notified about upcoming payments
+- Use the app completely offline
+
+With an elegant UI and local-first architecture, SubXtract focuses on **privacy, speed, and user control**.
+
+---
+
+## 🛠️ The Tech Stack
+
+### ⚡ Expo
+
+SubXtract is built with [**Expo**](https://expo.dev) for rapid development, native APIs out of the box, and easy deployment. I used the **Bare workflow** when necessary, especially for MMKV and notification features.
+
+Why Expo?
+
+- Fast iteration cycle
+- OTA updates
+- Great community ecosystem
+
+---
+
+### 📦 Zustand + MMKV for Local-First State Management
+
+SubXtract stores all user data locally on the device using a combination of **Zustand** (for state management) and **MMKV** (for super fast key-value storage).
+
+#### 🔐 Setting up MMKV
+
+```tsx
+// storage.ts
+import { MMKV } from "react-native-mmkv"
+
+export const storage = new MMKV()
+```
+
+#### 🧠 Zustand with Persistence Middleware
+
+```tsx
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
+import { storage } from "./storage"
+
+export const useSubscriptionStore = create(
+  persist(
+    (set) => ({
+      subscriptions: [],
+      addSubscription: (sub) =>
+        set((state) => ({
+          subscriptions: [...state.subscriptions, sub],
+        })),
+      toggleRenewal: (id) =>
+        set((state) => ({
+          subscriptions: state.subscriptions.map((s) =>
+            s.id === id ? { ...s, autoRenew: !s.autoRenew } : s
+          ),
+        })),
+      archiveSubscription: (id) =>
+        set((state) => ({
+          subscriptions: state.subscriptions.map((s) =>
+            s.id === id ? { ...s, archived: true } : s
+          ),
+        })),
+    }),
+    {
+      name: "subxtract-store",
+      storage: {
+        getItem: storage.getString.bind(storage),
+        setItem: storage.set.bind(storage),
+        removeItem: storage.delete.bind(storage),
+      },
+    }
+  )
+)
+```
+
+This setup ensures lightning-fast access to your app's state, even when offline.
+
+---
+
+### 🎭 Reanimated for Smooth Animations
+
+To give users a fluid and polished experience, I used **React Native Reanimated** for subtle animations across components like the add/edit modal, theme transitions, and button presses.
+
+#### 🎮 Simple Reanimated Example
+
+```tsx
+import Animated, {
+  useSharedValue,
+  withSpring,
+  useAnimatedStyle,
+} from "react-native-reanimated"
+
+const offset = useSharedValue(0)
+
+const animatedStyle = useAnimatedStyle(() => {
+  return {
+    transform: [{ translateY: withSpring(offset.value) }],
+  }
+})
+```
+
+---
+
+## 🌈 Custom Theming
+
+Users can select between light, dark, or system themes. A Zustand store syncs the selected theme across the app, and I use context + MMKV to persist it.
+
+```tsx
+export const useThemeStore = create(
+  persist(
+    (set) => ({
+      theme: "system",
+      setTheme: (theme) => set({ theme }),
+    }),
+    {
+      name: "theme-settings",
+      storage: {
+        getItem: storage.getString.bind(storage),
+        setItem: storage.set.bind(storage),
+        removeItem: storage.delete.bind(storage),
+      },
+    }
+  )
+)
+```
+
+---
+
+## 🔔 Local Notifications
+
+SubXtract notifies users about **upcoming payments** based on their billing cycle. This is implemented using Expo Notifications and scheduled jobs at the time of adding a subscription.
+
+---
+
+## 🚀 Check Out SubXtract on Product Hunt
+
+If you like what you see, don't forget to check out **SubXtract** on [Product Hunt](https://www.producthunt.com/products/subxtract) and show your support!
+
+<iframe
+  src="https://cards.producthunt.com/cards/products/1057027"
+  width="100%"
+  height="405"
+  frameborder="0"
+  scrolling="no"
+  allowfullscreen
+></iframe>
+
+---
+
+## 📊 Coming Soon: Analytics + Budgeting
+
+I’m actively working on adding:
+
+- 💸 Budget Cap Alerts
+- 📈 Analytics and trends for monthly/yearly spend
+- 🗖️ Upcoming view to filter subscriptions by due date
+
+These features will make SubXtract even more powerful and insightful for users managing multiple recurring expenses.
+
+---
+
+## ✨ Final Thoughts
+
+SubXtract is built with care to provide a **fast**, **offline-first**, and **privacy-respecting** experience for tracking subscriptions. Whether you're a minimalist user or someone who manages a dozen recurring payments, this app has you covered.
+
+If you're curious to try it out, download it now on the _[App Store](https://apps.apple.com/in/app/subxtract/id6743356978)_.
+
+---
+
+Thanks for reading! 💙  
+Happy tracking!

@@ -209,4 +209,38 @@ export const blogs = [
     ],
     createdAt: 1737276629000,
   },
+  {
+    title: "SubXtract - A Subscription Tracker App",
+    description: "My new Subscription Tracker app",
+    author: {
+      name: "Mohit Kumar",
+      image: "/authors/mohit.jpg",
+      slug: "/authors/mohit",
+    },
+    image: "/blogs/subxtract/cover.jpg",
+    slug: "/blogs/subxtract",
+    tags: [
+      {
+        name: "react native",
+        slug: "/tags/react-native",
+        color: "text-blue-500",
+      },
+      {
+        name: "expo",
+        slug: "/tags/expo",
+        color: "text-green-500",
+      },
+      {
+        name: "zustand",
+        slug: "/tags/zustand",
+        color: "text-yellow-500",
+      },
+      {
+        name: "reanimated",
+        slug: "/tags/reanimated",
+        color: "text-orange-500",
+      },
+    ],
+    createdAt: 1745073944960,
+  },
 ]
