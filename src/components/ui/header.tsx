@@ -38,15 +38,7 @@ function Header() {
                 Blogs
               </Link>
             </SheetClose>
-            <SheetClose asChild>
-              <Link
-                href="/subxtract/privacy-policy"
-                className="relative after:bg-black after:absolute after:h-0.5 after:rounded-lg after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer flex items-center gap-1"
-                target="_blank"
-              >
-                Privacy Policy (Subxtract)
-              </Link>
-            </SheetClose>
+
             <SheetClose asChild>
               <Link
                 href="/resume.pdf"
@@ -55,6 +47,15 @@ function Header() {
               >
                 Resume
                 <IconExternalLink className="h-4 w-4" />
+              </Link>
+            </SheetClose>
+            <SheetClose asChild>
+              <Link
+                href="/subxtract/privacy-policy"
+                className="relative after:bg-black after:absolute after:h-0.5 after:rounded-lg after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer text-base md:text-2xl xl:text-lg"
+                target="_blank"
+              >
+                Privacy Policy (Subxtract)
               </Link>
             </SheetClose>
           </div>
@@ -81,7 +82,7 @@ function Header() {
         </Link>
         <Link
           href="/subxtract/privacy-policy"
-          className="relative after:bg-black after:absolute after:h-0.5 after:rounded-lg after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer flex items-center gap-1"
+          className="relative after:bg-black after:absolute after:h-0.5 after:rounded-lg after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer"
           target="_blank"
         >
           Privacy Policy (Subxtract)
