@@ -69,24 +69,12 @@ const config = {
           to: { height: "0" },
         },
         "text-slide": {
-          "0%, 16%": {
-            transform: "translateY(0%)",
-          },
-          "20%, 36%": {
-            transform: "translateY(-16.66%)",
-          },
-          "40%, 56%": {
-            transform: "translateY(-33.33%)",
-          },
-          "60%, 76%": {
-            transform: "translateY(-50%)",
-          },
-          "80%, 96%": {
-            transform: "translateY(-66.66%)",
-          },
-          "100%": {
-            transform: "translateY(-83.33%)",
-          },
+          "0%, 16%": { transform: "translateY(0%)" },
+          "20%, 36%": { transform: "translateY(-16.66%)" },
+          "40%, 56%": { transform: "translateY(-33.33%)" },
+          "60%, 76%": { transform: "translateY(-50%)" },
+          "80%, 96%": { transform: "translateY(-66.66%)" },
+          "100%": { transform: "translateY(-83.33%)" },
         },
       },
       animation: {
@@ -98,6 +86,7 @@ const config = {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
         mono: ["var(--font-mono)", ...fontFamily.mono],
+        display: ["var(--font-display)", ...fontFamily.sans],
       },
     },
   },

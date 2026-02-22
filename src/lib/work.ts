@@ -1,30 +1,48 @@
-import { join } from "path"
+const CAREER_START_DATE = new Date(2020, 6, 1); // July 2021
+
+export function getYearsOfExperience(): number {
+  const now = new Date();
+  const years = now.getFullYear() - CAREER_START_DATE.getFullYear();
+  const monthDiff = now.getMonth() - CAREER_START_DATE.getMonth();
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && now.getDate() < CAREER_START_DATE.getDate())
+  ) {
+    return years - 1;
+  }
+  return years;
+}
 
 export const work = [
   {
-    title: "Zenduty",
-    position: "Senior Software Engineer",
+    title: "Xurrent IMR",
+    position: "Staff Software Engineer",
     description:
       "Zenduty’s end-to-end incident alerting, on-call management and response orchestration platform helps you institutionalize reliability into your production operations.",
-    image: "/work/zenduty.png",
-    url: "https://zenduty.com",
+    image: "/work/xurrent-imr.svg",
+    url: "https://www.xurrent.com/incident-management-response",
     joined: "July 2024",
-    slug: "/work/zenduty",
+    slug: "/work/xurrent-imr",
     stack: [
+      {
+        name: "Expo",
+        color: "border-blue-100",
+        accent: "text-blue-1000",
+      },
       {
         name: "React Native",
         color: "border-red-100",
         accent: "text-red-600",
       },
       {
+        name: "Python (Django)",
+        color: "border-purple-100",
+        accent: "text-purple-600",
+      },
+      {
         name: "Typescript",
         color: "border-yellow-100",
         accent: "text-yellow-600",
-      },
-      {
-        name: "Next.js",
-        color: "border-green-100",
-        accent: "text-green-600",
       },
     ],
     current: true,
@@ -90,27 +108,4 @@ export const work = [
     ],
     current: false,
   },
-  {
-    title: "Propstory",
-    position: "Frontend Developer ( Intern )",
-    description:
-      "Leverage your digital assets to increase your marketing ROI. Accelerate prospective sales and leads digitally and increase your customer base.",
-    image: "/work/propstory.png",
-    url: "https://propstory.in",
-    joined: "January 2020",
-    slug: "/work/propstory",
-    stack: [
-      {
-        name: "React.js",
-        color: "border-blue-100",
-        accent: "text-blue-1000",
-      },
-      {
-        name: "Javascript",
-        color: "border-yellow-100",
-        accent: "text-yellow-600",
-      },
-    ],
-    current: false,
-  },
-]
+];
