@@ -1,4 +1,5 @@
 import { Metadata } from "next"
+import BlogDetailLayout from "@/components/blog-detail-layout"
 
 export const metadata: Metadata = {
   title:
@@ -11,10 +12,9 @@ export const metadata: Metadata = {
 }
 
 export default function MdxLayout({ children }: { children: React.ReactNode }) {
-  // Create any shared layout or styles here
   return (
-    <div className="flex flex-col max-w-3xl mx-auto px-4 sm:px-6 xl:px-8 gap-6 text-xl py-10">
+    <BlogDetailLayout slug="/blogs/exploring-the-latest-react-19">
       {children}
-    </div>
+    </BlogDetailLayout>
   )
 }
