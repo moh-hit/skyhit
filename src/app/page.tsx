@@ -55,47 +55,114 @@ export default function Home() {
   return (
     <main className="relative">
       {/* ── Hero ── */}
-      <section className="min-h-screen flex flex-col justify-center px-6 md:px-10 pt-24 pb-20">
-        <div className="max-w-6xl mx-auto w-full">
-          {/* Status */}
-          <div className="animate-fade-in-up delay-1 flex items-center gap-3 mb-8">
-            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-            <span className="font-mono text-sm text-muted-foreground tracking-wide">
-              Currently building at{" "}
-              <a
-                href="https://zenduty.com"
-                target="_blank"
-                rel="noreferrer"
-                className="text-foreground hover:text-primary transition-colors"
-              >
-                Zenduty
-              </a>
-            </span>
-          </div>
+      <section className="min-h-screen flex flex-col justify-center px-6 md:px-10 pt-24 pb-20 overflow-hidden">
+        <div className="max-w-6xl mx-auto w-full relative">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr,auto] gap-8 items-center">
+            {/* Left — Content */}
+            <div>
+              {/* Status */}
+              <div className="animate-fade-in-up delay-1 flex items-center gap-3 mb-8">
+                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                <span className="font-mono text-sm text-muted-foreground tracking-wide">
+                  Currently building at{" "}
+                  <a
+                    href="https://zenduty.com"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-foreground hover:text-primary transition-colors"
+                  >
+                    Zenduty
+                  </a>
+                </span>
+              </div>
 
-          {/* Name */}
-          <h1 className="animate-fade-in-up delay-2 font-display font-bold leading-[0.85] tracking-tight text-foreground mb-6 text-[clamp(3.5rem,12vw,11rem)]">
-            MOHIT
-            <br />
-            <span className="text-primary">KUMAR</span>
-          </h1>
+              {/* Name */}
+              <h1 className="animate-fade-in-up delay-2 font-display font-bold leading-[0.85] tracking-tight text-foreground mb-6 text-[clamp(3.5rem,12vw,11rem)]">
+                MOHIT
+                <br />
+                <span className="text-primary">KUMAR</span>
+              </h1>
 
-          {/* Subtitle */}
-          <div className="animate-fade-in-up delay-4 max-w-xl mt-8 mb-10">
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-              Senior Software Engineer with{" "}
-              <span className="text-foreground font-medium">4+ years</span> of
-              experience building digital products across{" "}
-              <span className="text-foreground font-medium">React</span>,{" "}
-              <span className="text-foreground font-medium">React Native</span>
-              , and{" "}
-              <span className="text-foreground font-medium">Next.js</span>.
-            </p>
-          </div>
+              {/* Subtitle */}
+              <div className="animate-fade-in-up delay-4 max-w-xl mt-8 mb-10">
+                <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+                  Senior Software Engineer with{" "}
+                  <span className="text-foreground font-medium">
+                    4+ years
+                  </span>{" "}
+                  of experience building digital products across{" "}
+                  <span className="text-foreground font-medium">React</span>,{" "}
+                  <span className="text-foreground font-medium">
+                    React Native
+                  </span>
+                  , and{" "}
+                  <span className="text-foreground font-medium">Next.js</span>.
+                </p>
+              </div>
 
-          {/* CTA */}
-          <div className="animate-fade-in-up delay-5">
-            <LetsTalk />
+              {/* CTA */}
+              <div className="animate-fade-in-up delay-5">
+                <LetsTalk />
+              </div>
+            </div>
+
+            {/* Right — Animated decoration (desktop only) */}
+            <div className="hidden lg:block relative w-72 xl:w-80 h-[420px] animate-fade-in delay-3">
+              {/* Horizontal lines */}
+              <div className="absolute top-12 right-0 w-52 h-px bg-gradient-to-l from-primary/40 to-transparent hero-line" />
+              <div
+                className="absolute top-28 right-8 w-40 h-px bg-gradient-to-l from-border to-transparent hero-line"
+                style={{ animationDelay: "1s" }}
+              />
+              <div
+                className="absolute top-44 right-2 w-56 h-px bg-gradient-to-l from-primary/20 to-transparent hero-line"
+                style={{ animationDelay: "2s" }}
+              />
+              <div
+                className="absolute top-64 right-12 w-36 h-px bg-gradient-to-l from-muted-foreground/30 to-transparent hero-line"
+                style={{ animationDelay: "3s" }}
+              />
+              <div
+                className="absolute bottom-32 right-4 w-48 h-px bg-gradient-to-l from-primary/25 to-transparent hero-line"
+                style={{ animationDelay: "4s" }}
+              />
+
+              {/* Vertical accent lines */}
+              <div className="absolute top-8 right-20 w-px h-24 bg-gradient-to-b from-primary/30 to-transparent hero-line-pulse" />
+              <div
+                className="absolute top-36 right-44 w-px h-32 bg-gradient-to-b from-border to-transparent hero-line-pulse"
+                style={{ animationDelay: "2s" }}
+              />
+              <div
+                className="absolute bottom-20 right-28 w-px h-20 bg-gradient-to-b from-primary/20 to-transparent hero-line-pulse"
+                style={{ animationDelay: "3.5s" }}
+              />
+
+              {/* Floating dots */}
+              <div className="absolute top-20 right-36 w-1.5 h-1.5 rounded-full bg-primary/50 hero-dot" />
+              <div
+                className="absolute top-52 right-16 w-1 h-1 rounded-full bg-primary/40 hero-dot"
+                style={{ animationDelay: "2s" }}
+              />
+              <div
+                className="absolute bottom-40 right-48 w-1 h-1 rounded-full bg-muted-foreground/50 hero-dot"
+                style={{ animationDelay: "4s" }}
+              />
+
+              {/* Crosshair element */}
+              <div className="absolute top-1/2 right-24 -translate-y-1/2">
+                <div className="relative w-16 h-16 hero-crosshair opacity-20">
+                  <div className="absolute top-0 left-1/2 w-px h-full bg-primary/60 -translate-x-1/2" />
+                  <div className="absolute top-1/2 left-0 w-full h-px bg-primary/60 -translate-y-1/2" />
+                  <div className="absolute top-1/2 left-1/2 w-2 h-2 border border-primary/60 rounded-full -translate-x-1/2 -translate-y-1/2" />
+                </div>
+              </div>
+
+              {/* Corner brackets */}
+              <div className="absolute top-4 right-0 w-6 h-6 border-t border-r border-primary/20 animate-fade-in delay-5" />
+              <div className="absolute bottom-4 right-0 w-6 h-6 border-b border-r border-primary/20 animate-fade-in delay-6" />
+              <div className="absolute top-4 left-4 w-6 h-6 border-t border-l border-border/40 animate-fade-in delay-7" />
+            </div>
           </div>
         </div>
       </section>

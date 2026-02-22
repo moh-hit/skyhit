@@ -154,3 +154,53 @@ body::before {
   height: 1px;
   background: linear-gradient(to right, hsl(var(--border)), transparent);
 }
+
+/* Hero animated lines */
+@keyframes lineDrift {
+  0%, 100% { transform: translateY(0) scaleX(1); opacity: 0.4; }
+  50% { transform: translateY(-8px) scaleX(1.05); opacity: 0.7; }
+}
+
+@keyframes linePulse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes dotFloat {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(4px, -6px); }
+  50% { transform: translate(-2px, -10px); }
+  75% { transform: translate(6px, -4px); }
+}
+
+@keyframes crosshairSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.hero-line {
+  animation: lineDrift 6s ease-in-out infinite;
+}
+
+.hero-line-pulse {
+  animation: linePulse 4s ease-in-out infinite;
+}
+
+.hero-dot {
+  animation: dotFloat 8s ease-in-out infinite;
+}
+
+.hero-crosshair {
+  animation: crosshairSpin 20s linear infinite;
+}
+
+/* Work page timeline */
+@keyframes timelineDraw {
+  from { height: 0; }
+  to { height: 100%; }
+}
+
+.timeline-line {
+  animation: timelineDraw 1.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.3s;
+}

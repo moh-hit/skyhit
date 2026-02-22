@@ -1,7 +1,8 @@
 import { blogs } from "@/lib/blogs"
-import { IconArrowLeft, IconArrowRight, IconClock, IconCalendar } from "@tabler/icons-react"
+import { IconArrowLeft, IconArrowRight, IconClock, IconCalendar, IconMail } from "@tabler/icons-react"
 import Image from "next/image"
 import Link from "next/link"
+import LetsTalk from "@/components/lets-talk"
 
 interface BlogDetailLayoutProps {
   slug: string
@@ -112,6 +113,32 @@ export default function BlogDetailLayout({ slug, children }: BlogDetailLayoutPro
         <article className="animate-fade-in-up delay-3">
           {children}
         </article>
+      </div>
+
+      {/* Contact CTA */}
+      <div className="max-w-3xl mx-auto px-6 md:px-10 mt-16">
+        <div className="border border-border rounded-2xl p-8 md:p-10 bg-card/30 text-center">
+          <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-3">
+            Enjoyed this article?
+          </p>
+          <h3 className="font-display text-xl md:text-2xl font-bold mb-3">
+            {`Let's build something together`}
+          </h3>
+          <p className="text-muted-foreground text-sm max-w-md mx-auto mb-6">
+            Have a project in mind or just want to chat about React and mobile
+            development? I&apos;d love to hear from you.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <LetsTalk />
+            <a
+              href="mailto:moh.hit1012@gmail.com"
+              className="inline-flex items-center gap-2 border border-border text-foreground font-display font-medium px-6 py-3 rounded-full hover:bg-secondary transition-colors text-sm"
+            >
+              <IconMail className="h-4 w-4" />
+              Email me
+            </a>
+          </div>
+        </div>
       </div>
 
       {/* Prev / Next navigation */}

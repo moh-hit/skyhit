@@ -1,5 +1,3 @@
-import { join } from "path"
-
 export const work = [
   {
     title: "Zenduty",
