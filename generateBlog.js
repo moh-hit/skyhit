@@ -56,7 +56,7 @@ async function createBlog() {
     description: answers.description,
     author: {
       name: "Mohit Kumar",
-      image: "/authors/mohit.jpg",
+      image: "/authors/mohit.jpeg",
       slug: "/authors/mohit",
     },
     image: `/blogs/${answers.slug}/cover.jpg`,
@@ -108,7 +108,7 @@ async function createBlog() {
   <div className="flex items-center gap-2">
     <div className="relative w-12 h-12 rounded-full overflow-hidden">
       <Image
-        src="/authors/mohit.jpg"
+        src="/authors/mohit.jpeg"
         alt="Mohit Kumar"
         fill
         objectFit="cover"
