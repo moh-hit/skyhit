@@ -218,6 +218,37 @@ export const blogs = [
     createdAt: 1737276629000,
   },
   {
+    title: "From SubXtract to Petal — Rebuilding with AI and a New Mindset",
+    description:
+      "How Apple's broken payment gateway, my brother's dev account, and a year of AI-assisted development led me to build Petal — a better subscription tracker.",
+    author: {
+      name: "Mohit Kumar",
+      image: "/authors/mohit.jpeg",
+      slug: "/authors/mohit",
+    },
+    image: "/blogs/from-subxtract-to-petal/cover.jpg",
+    slug: "/blogs/from-subxtract-to-petal",
+    readTime: 7,
+    tags: [
+      {
+        name: "AI Dev",
+        slug: "/tags/ai-dev",
+        color: "text-violet-500",
+      },
+      {
+        name: "React Native",
+        slug: "/tags/react-native",
+        color: "text-blue-500",
+      },
+      {
+        name: "Indie Dev",
+        slug: "/tags/indie-dev",
+        color: "text-orange-500",
+      },
+    ],
+    createdAt: 1771718400000,
+  },
+  {
     title: "SubXtract - A Subscription Tracker App",
     description: "My new Subscription Tracker app",
     author: {

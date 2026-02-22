@@ -194,6 +194,21 @@ body::before {
   animation: crosshairSpin 20s linear infinite;
 }
 
+/* Spotify now-playing bars */
+@keyframes spotify-bar1 {
+  0%, 100% { height: 4px; }
+  50% { height: 12px; }
+}
+@keyframes spotify-bar2 {
+  0%, 100% { height: 10px; }
+  50% { height: 4px; }
+}
+@keyframes spotify-bar3 {
+  0%, 100% { height: 6px; }
+  33% { height: 12px; }
+  66% { height: 3px; }
+}
+
 /* Work page timeline */
 @keyframes timelineDraw {
   from { height: 0; }
