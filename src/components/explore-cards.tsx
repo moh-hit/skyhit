@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   IconArrowRight,
@@ -15,14 +15,14 @@ import {
   IconDeviceMobile,
   IconExternalLink,
   IconMail,
-} from "@tabler/icons-react"
-import React from "react"
-import { Tooltip, TooltipContent, TooltipProvider } from "./ui/tooltip"
-import { TooltipTrigger } from "@radix-ui/react-tooltip"
-import { Button } from "./ui/button"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { blogs } from "@/lib/blogs"
+} from "@tabler/icons-react";
+import React from "react";
+import { Tooltip, TooltipContent, TooltipProvider } from "./ui/tooltip";
+import { TooltipTrigger } from "@radix-ui/react-tooltip";
+import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { blogs } from "@/lib/blogs";
 
 const socials = [
   {
@@ -67,21 +67,21 @@ const socials = [
     color: "text-indigo-600",
     accent: "bg-blue-50",
   },
-]
+];
 
 function ExploreCards() {
-  const router = useRouter()
+  const router = useRouter();
 
   const onGoToPage = (page: string) => () => {
     if (page === "app") {
       window.open(
         "https://apps.apple.com/us/app/subxtract/id6743356978",
-        "_blank"
-      )
-      return
+        "_blank",
+      );
+      return;
     }
-    router.push(`/${page}`)
-  }
+    router.push(`/${page}`);
+  };
 
   return (
     <div className="flex flex-1 flex-col md:flex-row md:flex-wrap justify-between w-full h-full gap-10">
@@ -95,9 +95,9 @@ function ExploreCards() {
         >
           <h2 className="font-display text-md xl:text-xl font-medium">
             Currently working with{" "}
-            <span className="text-amber-500 font-bold">Zenduty</span>
+            <span className="text-amber-500 font-bold">Xurrent IMR</span>
           </h2>
-          <h2>as Senior Software Developer</h2>
+          <h2>as Staff Software Engineer</h2>
         </Link>
         <Button
           className="w-full rounded-xl text-md"
@@ -190,7 +190,7 @@ function ExploreCards() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default ExploreCards
+export default ExploreCards;

@@ -1,7 +1,7 @@
-import LetsTalk from "@/components/lets-talk"
-import { work } from "@/lib/work"
-import { blogs } from "@/lib/blogs"
-import Link from "next/link"
+import LetsTalk from "@/components/lets-talk";
+import { work, getYearsOfExperience } from "@/lib/work";
+import { blogs } from "@/lib/blogs";
+import Link from "next/link";
 import {
   IconArrowRight,
   IconArrowUpRight,
@@ -12,7 +12,7 @@ import {
   IconBrandLinkedin,
   IconBrandTwitter,
   IconMail,
-} from "@tabler/icons-react"
+} from "@tabler/icons-react";
 
 const socials = [
   {
@@ -45,12 +45,12 @@ const socials = [
     href: "mailto:moh.hit1012@gmail.com",
     icon: IconMail,
   },
-]
+];
 
 export default function Home() {
   const sortedBlogs = [...blogs]
     .sort((a, b) => b.createdAt - a.createdAt)
-    .slice(0, 5)
+    .slice(0, 5);
 
   return (
     <main className="relative">
@@ -66,12 +66,12 @@ export default function Home() {
                 <span className="font-mono text-sm text-muted-foreground tracking-wide">
                   Currently building at{" "}
                   <a
-                    href="https://zenduty.com"
+                    href="https://www.xurrent.com/incident-management-response"
                     target="_blank"
                     rel="noreferrer"
                     className="text-foreground hover:text-primary transition-colors"
                   >
-                    Zenduty
+                    Xurrent IMR
                   </a>
                 </span>
               </div>
@@ -87,9 +87,7 @@ export default function Home() {
               <div className="animate-fade-in-up delay-4 max-w-xl mt-8 mb-10">
                 <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
                   Senior Software Engineer with{" "}
-                  <span className="text-foreground font-medium">
-                    4+ years
-                  </span>{" "}
+                  <span className="text-foreground font-medium">{getYearsOfExperience()}+ years</span>{" "}
                   of experience building digital products across{" "}
                   <span className="text-foreground font-medium">React</span>,{" "}
                   <span className="text-foreground font-medium">
@@ -310,20 +308,16 @@ export default function Home() {
                 recurring payments. Built with React Native, Expo, and Zustand.
               </p>
               <div className="flex flex-wrap gap-2 mb-8">
-                {[
-                  "React Native",
-                  "Expo",
-                  "Zustand",
-                  "Reanimated",
-                  "MMKV",
-                ].map((tech) => (
-                  <span
-                    key={tech}
-                    className="font-mono text-xs text-muted-foreground bg-secondary border border-border px-3 py-1.5 rounded-lg"
-                  >
-                    {tech}
-                  </span>
-                ))}
+                {["React Native", "Expo", "Zustand", "Reanimated", "MMKV"].map(
+                  (tech) => (
+                    <span
+                      key={tech}
+                      className="font-mono text-xs text-muted-foreground bg-secondary border border-border px-3 py-1.5 rounded-lg"
+                    >
+                      {tech}
+                    </span>
+                  ),
+                )}
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
                 <a
@@ -392,5 +386,5 @@ export default function Home() {
         </div>
       </footer>
     </main>
-  )
+  );
 }

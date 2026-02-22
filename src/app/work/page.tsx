@@ -1,37 +1,47 @@
-import { work } from "@/lib/work"
-import { IconArrowUpRight, IconArrowRight } from "@tabler/icons-react"
-import Image from "next/image"
-import Link from "next/link"
+import { work, getYearsOfExperience } from "@/lib/work";
+import { IconArrowUpRight, IconArrowRight } from "@tabler/icons-react";
+import Image from "next/image";
+import Link from "next/link";
 
 function getDuration(joined: string, current: boolean): string {
   const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December",
-  ]
-  const parts = joined.split(" ")
-  const monthIndex = months.indexOf(parts[0])
-  const year = parseInt(parts[1])
-  const start = new Date(year, monthIndex)
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const parts = joined.split(" ");
+  const monthIndex = months.indexOf(parts[0]);
+  const year = parseInt(parts[1]);
+  const start = new Date(year, monthIndex);
   const end = current
     ? new Date()
     : (() => {
-        const idx = work.findIndex((w) => w.joined === joined)
+        const idx = work.findIndex((w) => w.joined === joined);
         if (idx > 0) {
-          const prev = work[idx - 1].joined.split(" ")
-          return new Date(parseInt(prev[1]), months.indexOf(prev[0]))
+          const prev = work[idx - 1].joined.split(" ");
+          return new Date(parseInt(prev[1]), months.indexOf(prev[0]));
         }
-        return new Date()
-      })()
+        return new Date();
+      })();
 
   const diffMonths =
     (end.getFullYear() - start.getFullYear()) * 12 +
-    (end.getMonth() - start.getMonth())
-  const years = Math.floor(diffMonths / 12)
-  const remainingMonths = diffMonths % 12
+    (end.getMonth() - start.getMonth());
+  const years = Math.floor(diffMonths / 12);
+  const remainingMonths = diffMonths % 12;
 
-  if (years > 0 && remainingMonths > 0) return `${years}y ${remainingMonths}m`
-  if (years > 0) return `${years}y`
-  return `${remainingMonths}m`
+  if (years > 0 && remainingMonths > 0) return `${years}y ${remainingMonths}m`;
+  if (years > 0) return `${years}y`;
+  return `${remainingMonths}m`;
 }
 
 function WorkPage() {
@@ -56,7 +66,7 @@ function WorkPage() {
             WORK
           </h1>
           <p className="text-muted-foreground text-lg md:text-xl max-w-2xl leading-relaxed animate-fade-in-up delay-1">
-            {`Over 4+ years I've had the privilege of building products across
+            {`Over ${getYearsOfExperience()}+ years I've had the privilege of building products across
             fintech, gaming, SaaS, and real estate — always pushing the
             boundaries of what's possible on the web and mobile.`}
           </p>
@@ -83,7 +93,7 @@ function WorkPage() {
                   stack,
                   current,
                 },
-                i
+                i,
               ) => (
                 <div
                   key={title}
@@ -129,12 +139,12 @@ function WorkPage() {
                           rel="noreferrer"
                           className="block group/logo"
                         >
-                          <div className="relative w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-secondary rounded-xl overflow-hidden border border-border group-hover/logo:border-primary/30 transition-colors">
+                          <div className="relative w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-secondary rounded-[1.25rem] overflow-hidden border border-border group-hover/logo:border-primary/30 transition-colors">
                             <Image
                               src={image}
                               alt={title}
                               fill
-                              className="object-contain p-2"
+                              className="p-2 rounded-[1.25rem] overflow-hidden"
                             />
                           </div>
                         </a>
@@ -180,7 +190,7 @@ function WorkPage() {
                     </div>
                   </div>
                 </div>
-              )
+              ),
             )}
           </div>
         </div>
@@ -190,7 +200,7 @@ function WorkPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             <div className="animate-fade-in-up delay-2">
               <span className="font-display text-3xl md:text-4xl font-bold text-primary">
-                4+
+                {getYearsOfExperience()}+
               </span>
               <p className="font-mono text-xs text-muted-foreground mt-1 uppercase tracking-wider">
                 Years
@@ -207,8 +217,9 @@ function WorkPage() {
             <div className="animate-fade-in-up delay-4">
               <span className="font-display text-3xl md:text-4xl font-bold text-foreground">
                 {
-                  Array.from(new Set(work.flatMap((w) => w.stack.map((s) => s.name))))
-                    .length
+                  Array.from(
+                    new Set(work.flatMap((w) => w.stack.map((s) => s.name))),
+                  ).length
                 }
               </span>
               <p className="font-mono text-xs text-muted-foreground mt-1 uppercase tracking-wider">
@@ -244,7 +255,7 @@ function WorkPage() {
         </div>
       </div>
     </main>
-  )
+  );
 }
 
-export default WorkPage
+export default WorkPage;
