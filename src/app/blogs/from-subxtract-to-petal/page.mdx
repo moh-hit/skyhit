@@ -1,0 +1,228 @@
+A year ago I shipped my first solo iOS app — **SubXtract**, a subscription tracker. Simple idea, clean UI, offline-first. I was proud of it. Then came Apple.
+
+---
+
+## The Apple Dev Account Mess
+
+I built SubXtract, had it ready to submit, and hit a wall: Apple's payment gateway refused my card. Tried different cards. Tried different browsers. Tried support — which, if you've ever dealt with Apple Developer Support, you know what I mean. A loop of "we're looking into it" tickets going nowhere.
+
+After weeks of back and forth, I had a working app sitting on my machine with no way to publish it. So I did the next logical thing — my brother had an Apple Developer account. He listed it. SubXtract went live under his account.
+
+It worked for a while. People downloaded it. But here's the thing about shipping under someone else's account: it's theirs. Push notifications, analytics, revenue, everything routes through them. You're a guest in your own project.
+
+Then his membership lapsed. The app got pulled. Just like that — gone from the store, no warning, no migration path. The app I built, the users who had it, the listing — all of it tied to an account that no longer existed.
+
+That's the moment I decided to stop waiting on Apple and just figure it out.
+
+---
+
+## Rebuilding — On My Own Account, With a Different Mindset
+
+Eventually I got my own membership sorted. And instead of just re-submitting the same app, I decided to rebuild it from scratch. Not because the original code was bad — it was fine. But because in the time since I shipped SubXtract, the way I develop has fundamentally changed.
+
+A year ago, "building fast" meant knowing your tools well and grinding. Today it means something different.
+
+---
+
+## How AI Changed Everything
+
+I don't mean AI in the vague "AI is transforming software" sense. I mean specifically: **the gap between idea and working implementation collapsed**.
+
+A year ago, building a new screen in React Native meant:
+1. Write the component
+2. Wonder if you're doing the animation right
+3. Check docs
+4. Write it wrong
+5. Check StackOverflow
+6. Fix it
+7. Realize you broke something else
+
+Today I'm testing ideas in real time. What used to take an afternoon now takes 20 minutes — and the output is actually cleaner because I'm spending that saved time reviewing and refining instead of grinding boilerplate.
+
+The tools that made this shift real for me:
+
+---
+
+### Claude Code
+
+This is my primary coding tool now. What makes it different from pasting code into a chat is the **context it holds**. It reads your whole project — file structure, existing patterns, how you name things. When I ask it to add a feature, it fits into what I've already built.
+
+The other thing is that it pushes back. Claude Code doesn't just execute — it explains tradeoffs, flags potential issues, and questions your approach when something seems off. That's the difference between a tool and a collaborator.
+
+It also has a `CLAUDE.md` file at the root of your project where you can define project-wide rules — preferred libraries, code style, naming conventions. Every session starts with that context loaded.
+
+```md
+<!-- CLAUDE.md -->
+# Project Rules
+
+- Use Zustand for all state management
+- Persist storage via MMKV, not AsyncStorage
+- All screens must have a safe area inset wrapper
+- Prefer early returns over nested conditionals
+- Never use inline styles — use StyleSheet.create
+```
+
+Once that's written, you stop repeating yourself across every prompt.
+
+---
+
+### Cursor
+
+Cursor is where I live for writing code. The `@codebase` context awareness lets you reference actual files in your prompts. You're not describing your project — you're pointing at it.
+
+The multi-file edit workflow is where it really shines. Say I'm updating how subscriptions are stored — I can describe the change once and Cursor propagates it through the store, the types, the components, and the hooks without losing coherence.
+
+```bash
+# Example: refactor subscription schema across the whole codebase
+# In Cursor chat:
+# "@codebase The subscription type needs a `currencyCode` field.
+#  Update the Zustand store, all relevant components, and the
+#  TypeScript types to reflect this."
+```
+
+---
+
+### Opus for Hard Problems
+
+When the problem is genuinely hard — architecture decisions, debugging something weird, reasoning through a tricky async issue — I reach for Claude Opus. The quality jump when you need actual reasoning (not just code completion) is real.
+
+I used it when I was figuring out how to structure Petal's sync architecture: offline writes, conflict resolution, eventual consistency. That's not a "generate this component" problem — it's a design problem. Opus handled it like a senior engineer walking through options.
+
+---
+
+### Custom Skills in Claude Code
+
+This one is underrated and I haven't seen enough people talk about it.
+
+Claude Code lets you define **custom skills** — reusable prompt templates you invoke with a slash command, both in the CLI and inside Cursor's IDE extension. You write the skill once, and it becomes a permanent shortcut with full project context.
+
+Here's what a simple component scaffold skill looks like:
+
+```md
+<!-- .claude/skills/new-screen.md -->
+Create a new React Native screen for $ARGUMENTS.
+
+Requirements:
+- Use SafeAreaView as the root wrapper
+- Import and apply styles using StyleSheet.create at the bottom
+- Add a loading state with ActivityIndicator if data fetching is needed
+- Place the file in src/screens/ and export as default
+- Follow the naming pattern: PascalCase for the component, kebab-case for the file
+```
+
+Then in the terminal or IDE:
+
+```bash
+/new-screen SubscriptionDetail
+```
+
+It generates a properly structured screen that matches my project patterns — no explaining, no back and forth. I have similar skills for:
+
+- Zustand store slices
+- API route handlers
+- Commit message formatting
+- PR descriptions
+- Review checklists
+
+The compounding effect is real. Each skill you encode is a tax you stop paying on every future session.
+
+---
+
+## The Stack in SubXtract vs Petal
+
+Here's a rough diff of how my thinking evolved between the two versions:
+
+```ts
+// SubXtract: simple offline-first store with MMKV
+export const useSubscriptionStore = create(
+  persist(
+    (set) => ({
+      subscriptions: [],
+      addSubscription: (sub) =>
+        set((state) => ({ subscriptions: [...state.subscriptions, sub] })),
+    }),
+    {
+      name: "subxtract-store",
+      storage: {
+        getItem: storage.getString.bind(storage),
+        setItem: storage.set.bind(storage),
+        removeItem: storage.delete.bind(storage),
+      },
+    }
+  )
+)
+```
+
+That worked. But it meant every user's data was trapped on one device. No backup. No sync. If you switched phones, you started over.
+
+For Petal, I'm separating concerns more deliberately:
+
+```ts
+// Petal: local state + sync layer, separate responsibilities
+export const useSubscriptionStore = create<SubscriptionStore>((set, get) => ({
+  subscriptions: [],
+  syncStatus: "idle",
+
+  addSubscription: async (sub) => {
+    // Optimistic local update
+    set((state) => ({ subscriptions: [...state.subscriptions, sub] }))
+    // Background sync — doesn't block the UI
+    syncQueue.push({ type: "CREATE", payload: sub })
+  },
+
+  markSynced: (id) =>
+    set((state) => ({
+      subscriptions: state.subscriptions.map((s) =>
+        s.id === id ? { ...s, synced: true } : s
+      ),
+    })),
+}))
+```
+
+The UI stays fast (optimistic updates), sync happens in the background, and if you're offline it queues up until you're back. Both the old and new approach are valid — but understanding the tradeoff comes from shipping the first one and hitting its limits.
+
+---
+
+## Tips I'd Give Myself a Year Ago
+
+**Be specific about what you want.** Vague prompts produce vague output. "Add a settings screen" is worse than "add a settings screen with sections for notifications, theme, and currency — matching the existing component patterns in this project."
+
+**Review everything before it lands.** AI tools are fast but not infallible. Read the diff. You'll catch edge cases the model missed, and you'll actually understand your own codebase better for it.
+
+**Don't fight the model's suggestions — question them.** If it proposes an approach you wouldn't have chosen, ask why. Sometimes it knows something you don't. Sometimes you know your constraints better. The conversation is the point.
+
+**Encode your patterns early.** Write your `CLAUDE.md` on day one, not day forty. If you find yourself repeating the same context across sessions — write it down once and reference it forever.
+
+**Test your ideas cheap.** The biggest shift for me is using AI to validate a concept before committing to it. Describe the feature, get a rough implementation, see if it actually feels right in practice, and throw it away if it doesn't. The cost of being wrong dropped dramatically.
+
+**Keep your prompts close to the code.** Context is everything. The more the model knows about the specific file, the specific function, the specific problem — the better the output. Don't describe things in the abstract when you can just point at them.
+
+**Own your infrastructure.** Don't publish under someone else's account, don't build on a platform where you're one expired membership away from losing everything. This applies to dev accounts, API keys, domain ownership — all of it.
+
+---
+
+## Enter Petal
+
+So I'm rebuilding the subscription tracker. But this time it's not just a port — it's a rethink.
+
+**Petal** is the version of this app I would have built if I knew then what I know now. Same core idea (track your subscriptions, stay on top of recurring costs), but with everything I've learned about what actually matters to users and what was noise in the first version.
+
+What Petal will offer:
+
+- A cleaner, more opinionated UI — less configurable clutter, more clarity
+- Smarter spending insights — not just a list, actual visibility into where your money goes monthly and yearly
+- Sync across devices — the offline-first approach was a constraint, not a feature; Petal will do both
+- Faster onboarding — SubXtract had friction. Petal won't.
+- Built on my own account — I own what I ship
+
+I'm building it in public. You can follow the journey at **[petal.skyhit.app](https://petal.skyhit.app)**.
+
+---
+
+## Follow Along
+
+I'm going to document this build — the decisions, the dead ends, the things that surprised me. If you're building something with React Native, or you're figuring out how to make AI tools actually work for you instead of just generating noise, I think there'll be something useful here.
+
+The gap between what you can build today and what was possible a year ago is larger than most people realize. SubXtract was built the old way. Petal is going to show what the new way looks like end-to-end.
+
+See you there.

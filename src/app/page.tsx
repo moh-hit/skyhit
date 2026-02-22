@@ -1,11 +1,12 @@
 import LetsTalk from "@/components/lets-talk";
+import NowPlaying from "@/components/now-playing";
+import GitHubStats from "@/components/github-stats";
 import { work, getYearsOfExperience } from "@/lib/work";
 import { blogs } from "@/lib/blogs";
 import Link from "next/link";
 import {
   IconArrowRight,
   IconArrowUpRight,
-  IconBrandAppleFilled,
   IconBrandDiscord,
   IconBrandGithub,
   IconBrandInstagram,
@@ -57,6 +58,12 @@ export default function Home() {
       {/* ── Hero ── */}
       <section className="min-h-screen flex flex-col justify-center px-6 md:px-10 pt-24 pb-20 overflow-hidden">
         <div className="max-w-6xl mx-auto w-full relative">
+          {/* Widgets — top right (desktop only) */}
+          <div className="hidden md:flex flex-col items-end gap-2 absolute top-0 right-0 animate-fade-in delay-5 z-10">
+            <GitHubStats />
+            <NowPlaying />
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-[1fr,auto] gap-8 items-center">
             {/* Left — Content */}
             <div>
@@ -87,7 +94,9 @@ export default function Home() {
               <div className="animate-fade-in-up delay-4 max-w-xl mt-8 mb-10">
                 <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
                   Senior Software Engineer with{" "}
-                  <span className="text-foreground font-medium">{getYearsOfExperience()}+ years</span>{" "}
+                  <span className="text-foreground font-medium">
+                    {getYearsOfExperience()}+ years
+                  </span>{" "}
                   of experience building digital products across{" "}
                   <span className="text-foreground font-medium">React</span>,{" "}
                   <span className="text-foreground font-medium">
@@ -301,7 +310,7 @@ export default function Home() {
           <div className="border border-border rounded-2xl p-8 md:p-12 hover:border-primary/30 transition-colors duration-500">
             <div className="flex-1">
               <h3 className="font-display text-2xl md:text-3xl font-bold mb-3">
-                SubXtract
+                Petal
               </h3>
               <p className="text-muted-foreground text-lg max-w-lg mb-6">
                 A subscription tracker app that helps you stay on top of
@@ -321,16 +330,16 @@ export default function Home() {
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
                 <a
-                  href="https://apps.apple.com/us/app/subxtract/id6743356978"
+                  href="https://petal.skyhit.app"
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center justify-center gap-2 bg-foreground text-background font-medium px-6 py-3 rounded-xl hover:opacity-90 transition-opacity text-sm"
                 >
-                  <IconBrandAppleFilled className="h-4 w-4" />
-                  App Store
+                  Visit petal.skyhit.app
+                  <IconArrowUpRight className="h-4 w-4" />
                 </a>
                 <Link
-                  href="/blogs/subxtract"
+                  href="/blogs/from-subxtract-to-petal"
                   className="inline-flex items-center justify-center gap-2 border border-border text-foreground font-medium px-6 py-3 rounded-xl hover:bg-secondary transition-colors text-sm"
                 >
                   Read the story

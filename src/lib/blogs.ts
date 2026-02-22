@@ -3,7 +3,7 @@ export const blogs = [
     title: "Understanding Compound Components in React",
     author: {
       name: "Mohit Kumar",
-      image: "/authors/mohit.jpg",
+      image: "/authors/mohit.jpeg",
       slug: "/authors/mohit",
     },
     description:
@@ -24,7 +24,7 @@ export const blogs = [
     title: "Master animations in React Native with Reanimated 2",
     author: {
       name: "Mohit Kumar",
-      image: "/authors/mohit.jpg",
+      image: "/authors/mohit.jpeg",
       slug: "/authors/mohit",
     },
     description:
@@ -50,7 +50,7 @@ export const blogs = [
     title: "Implementing Custom Theming in a React Native App",
     author: {
       name: "Mohit Kumar",
-      image: "/authors/mohit.jpg",
+      image: "/authors/mohit.jpeg",
       slug: "/authors/mohit",
     },
     description:
@@ -81,7 +81,7 @@ export const blogs = [
     title: "Advanced Hooks Pattern and Techniques",
     author: {
       name: "Mohit Kumar",
-      image: "/authors/mohit.jpg",
+      image: "/authors/mohit.jpeg",
       slug: "/authors/mohit",
     },
     description:
@@ -107,7 +107,7 @@ export const blogs = [
     title: "Exploring the Latest React 19 ",
     author: {
       name: "Mohit Kumar",
-      image: "/authors/mohit.jpg",
+      image: "/authors/mohit.jpeg",
       slug: "/authors/mohit",
     },
     description:
@@ -133,7 +133,7 @@ export const blogs = [
     title: "Using Native Code in React Native: A Beginner’s Guide",
     author: {
       name: "Mohit Kumar",
-      image: "/authors/mohit.jpg",
+      image: "/authors/mohit.jpeg",
       slug: "/authors/mohit",
     },
     description:
@@ -159,7 +159,7 @@ export const blogs = [
     title: "Simplifying Side Effects: Dependencies in React’s useEffect",
     author: {
       name: "Mohit Kumar",
-      image: "/authors/mohit.jpg",
+      image: "/authors/mohit.jpeg",
       slug: "/authors/mohit",
     },
     description:
@@ -192,7 +192,7 @@ export const blogs = [
       "A comprehensive guide on building real-time collaborative applications with React using tools like WebSockets and WebRTC.",
     author: {
       name: "Mohit Kumar",
-      image: "/authors/mohit.jpg",
+      image: "/authors/mohit.jpeg",
       slug: "/authors/mohit",
     },
     image: "/blogs/realtime-collaboration-with-react/cover.jpg",
@@ -218,11 +218,42 @@ export const blogs = [
     createdAt: 1737276629000,
   },
   {
+    title: "From SubXtract to Petal — Rebuilding with AI and a New Mindset",
+    description:
+      "How Apple's broken payment gateway, my brother's dev account, and a year of AI-assisted development led me to build Petal — a better subscription tracker.",
+    author: {
+      name: "Mohit Kumar",
+      image: "/authors/mohit.jpeg",
+      slug: "/authors/mohit",
+    },
+    image: "/blogs/from-subxtract-to-petal/cover.jpg",
+    slug: "/blogs/from-subxtract-to-petal",
+    readTime: 7,
+    tags: [
+      {
+        name: "AI Dev",
+        slug: "/tags/ai-dev",
+        color: "text-violet-500",
+      },
+      {
+        name: "React Native",
+        slug: "/tags/react-native",
+        color: "text-blue-500",
+      },
+      {
+        name: "Indie Dev",
+        slug: "/tags/indie-dev",
+        color: "text-orange-500",
+      },
+    ],
+    createdAt: 1771718400000,
+  },
+  {
     title: "SubXtract - A Subscription Tracker App",
     description: "My new Subscription Tracker app",
     author: {
       name: "Mohit Kumar",
-      image: "/authors/mohit.jpg",
+      image: "/authors/mohit.jpeg",
       slug: "/authors/mohit",
     },
     image: "/blogs/subxtract/cover.jpg",
@@ -252,4 +283,4 @@ export const blogs = [
     ],
     createdAt: 1745073944960,
   },
-]
+];
