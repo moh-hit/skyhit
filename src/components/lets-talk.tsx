@@ -1,6 +1,5 @@
 "use client"
 import React from "react"
-import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogClose,
@@ -12,16 +11,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { IconArrowRight, IconCheck, IconLoader } from "@tabler/icons-react"
-import { set, z } from "zod"
+import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -57,13 +54,13 @@ function LetsTalk() {
         message: values.message,
       })
       toast(
-        "Congratulations, You have successfully submitted the form. Now just sit back, let me take care of this.",
+        "Message sent successfully. I'll get back to you soon.",
         {
           position: "bottom-right",
           icon: <IconCheck className="h-5 w-5" />,
           style: {
-            background: "rgb(var(--toast-success))",
-            color: "rgb(var(--white))",
+            background: "hsl(142 71% 45%)",
+            color: "#fff",
           },
         }
       )
@@ -78,31 +75,36 @@ function LetsTalk() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          className="font-bold rounded-full bg-gradient-to-r from-indigo-600 to-blue-500"
-          size="xl"
-        >
+        <button className="group inline-flex items-center gap-3 bg-primary text-primary-foreground font-display font-semibold px-8 py-4 rounded-full hover:brightness-110 transition-all duration-300 text-sm md:text-base">
           {`Let's Talk`}
-          <IconArrowRight className="ml-2 h-5 w-5" />
-        </Button>
+          <IconArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+        </button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[440px] bg-card border-border rounded-2xl">
         <DialogHeader>
-          <DialogTitle>{"Contact me"}</DialogTitle>
-          <DialogDescription>
-            {"Let's get in touch and find out how I can help you."}
+          <DialogTitle className="font-display text-xl font-bold">
+            Get in touch
+          </DialogTitle>
+          <DialogDescription className="text-muted-foreground">
+            {`Drop me a message and I'll get back to you.`}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                    Name
+                  </FormLabel>
                   <FormControl>
-                    <Input id="name" defaultValue="" {...field} />
+                    <Input
+                      placeholder="Your name"
+                      className="bg-secondary border-border focus:border-primary rounded-xl h-11"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -113,9 +115,15 @@ function LetsTalk() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                    Email
+                  </FormLabel>
                   <FormControl>
-                    <Input id="email" defaultValue="" {...field} />
+                    <Input
+                      placeholder="your@email.com"
+                      className="bg-secondary border-border focus:border-primary rounded-xl h-11"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -126,27 +134,32 @@ function LetsTalk() {
               name="message"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Message</FormLabel>
+                  <FormLabel className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                    Message
+                  </FormLabel>
                   <FormControl>
-                    <Textarea id="message" defaultValue="" {...field} />
+                    <Textarea
+                      placeholder="What's on your mind?"
+                      className="bg-secondary border-border focus:border-primary rounded-xl min-h-[100px] resize-none"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <DialogFooter>
-              <DialogClose>
-                <Button
-                  className="font-bold bg-gradient-to-r from-indigo-600 to-blue-500"
-                  size="xl"
+              <DialogClose asChild>
+                <button
+                  className="w-full inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-display font-semibold px-6 py-3 rounded-xl hover:brightness-110 transition-all duration-300 disabled:opacity-50"
                   type="submit"
                   disabled={loading}
                 >
                   {loading && (
-                    <IconLoader className="mr-2 h-4 w-4 animate-spin" />
+                    <IconLoader className="h-4 w-4 animate-spin" />
                   )}
-                  Submit
-                </Button>
+                  Send Message
+                </button>
               </DialogClose>
             </DialogFooter>
           </form>

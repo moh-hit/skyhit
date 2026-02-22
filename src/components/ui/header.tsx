@@ -1,22 +1,30 @@
-import { IconExternalLink, IconMenu2 } from "@tabler/icons-react"
+import { IconArrowUpRight, IconMenu2 } from "@tabler/icons-react"
 import Link from "next/link"
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "./sheet"
 
 function Header() {
   return (
-    <div className="flex items-center justify-end px-10 py-4">
+    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10 py-5 bg-background/80 backdrop-blur-xl border-b border-border/50">
+      <Link
+        href="/"
+        className="font-display text-xl font-bold tracking-tight text-foreground hover:text-primary transition-colors duration-300"
+      >
+        MK
+      </Link>
+
+      {/* Mobile menu */}
       <Sheet>
         <SheetTrigger asChild className="md:hidden">
-          <IconMenu2 className="h-8 w-8" />
+          <button className="p-2 hover:bg-secondary rounded-lg transition-colors">
+            <IconMenu2 className="h-5 w-5" />
+          </button>
         </SheetTrigger>
-        <SheetContent>
-          <div
-            className={`flex items-center gap-10 font-medium text-2xl xl:text-lg w-full flex-col mt-10 justify-end`}
-          >
+        <SheetContent className="bg-background border-border">
+          <div className="flex flex-col gap-8 mt-16">
             <SheetClose asChild>
               <Link
                 href="/"
-                className="relative after:bg-black after:absolute after:h-0.5 after:rounded-lg after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer"
+                className="font-display text-2xl text-foreground hover:text-primary transition-colors"
               >
                 Home
               </Link>
@@ -24,7 +32,7 @@ function Header() {
             <SheetClose asChild>
               <Link
                 href="/work"
-                className="relative after:bg-black after:absolute after:h-0.5 after:rounded-lg after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer"
+                className="font-display text-2xl text-foreground hover:text-primary transition-colors"
               >
                 Work
               </Link>
@@ -32,54 +40,55 @@ function Header() {
             <SheetClose asChild>
               <Link
                 href="/blogs"
-                className="relative after:bg-black after:absolute after:h-0.5 after:rounded-lg after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer"
+                className="font-display text-2xl text-foreground hover:text-primary transition-colors"
               >
-                Blogs
+                Blog
               </Link>
             </SheetClose>
-
             <SheetClose asChild>
               <Link
                 href="/resume.pdf"
-                className="relative after:bg-black after:absolute after:h-0.5 after:rounded-lg after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer flex items-center gap-1"
                 target="_blank"
+                className="font-display text-2xl text-foreground hover:text-primary transition-colors flex items-center gap-2"
               >
                 Resume
-                <IconExternalLink className="h-4 w-4" />
+                <IconArrowUpRight className="h-5 w-5" />
               </Link>
             </SheetClose>
           </div>
         </SheetContent>
       </Sheet>
-      <div className="items-center gap-10 font-medium text-2xl xl:text-lg hidden md:flex">
+
+      {/* Desktop nav */}
+      <div className="hidden md:flex items-center gap-8 font-mono text-sm tracking-wide">
         <Link
           href="/"
-          className="relative after:bg-black after:absolute after:h-0.5 after:rounded-lg after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer"
+          className="link-hover text-muted-foreground hover:text-foreground transition-colors duration-300 uppercase"
         >
           Home
         </Link>
         <Link
           href="/work"
-          className="relative after:bg-black after:absolute after:h-0.5 after:rounded-lg after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer"
+          className="link-hover text-muted-foreground hover:text-foreground transition-colors duration-300 uppercase"
         >
           Work
         </Link>
         <Link
           href="/blogs"
-          className="relative after:bg-black after:absolute after:h-0.5 after:rounded-lg after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer"
+          className="link-hover text-muted-foreground hover:text-foreground transition-colors duration-300 uppercase"
         >
-          Blogs
+          Blog
         </Link>
         <Link
           href="/resume.pdf"
-          className="relative after:bg-black after:absolute after:h-0.5 after:rounded-lg after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer flex items-center gap-1"
           target="_blank"
+          className="link-hover text-muted-foreground hover:text-foreground transition-colors duration-300 uppercase flex items-center gap-1.5"
         >
           Resume
-          <IconExternalLink className="h-4 w-4" />
+          <IconArrowUpRight className="h-3 w-3" />
         </Link>
       </div>
-    </div>
+    </nav>
   )
 }
 

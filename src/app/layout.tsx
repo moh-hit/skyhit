@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 import {
-  DM_Sans as FontSans,
-  Spline_Sans_Mono as FontMono,
+  Bricolage_Grotesque,
+  Instrument_Sans,
+  JetBrains_Mono,
 } from "next/font/google"
 import "./globals.css"
 import { cn } from "@/lib/utils"
@@ -10,20 +11,27 @@ import { Toaster } from "@/components/ui/sonner"
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
-const fontSans = FontSans({
+const fontDisplay = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-display",
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
+})
+
+const fontSans = Instrument_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
 })
 
-const fontMono = FontMono({
+const fontMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
+  weight: ["400", "500"],
 })
 
 export const metadata: Metadata = {
-  title: "Mohit Kumar - Software Developer",
+  title: "Mohit Kumar — Software Engineer",
   description:
-    "Mohit Kumar's personal website, a React Native, React and Nextjs developer. Have decent experience in golang and Nodejs as backend. Have worked in multiple domains like Fintech, Gaming, SaaS.",
+    "Senior Software Engineer with 4+ years crafting digital experiences across React, React Native, and Next.js. Currently building at Zenduty.",
   openGraph: {
     images: "/logo.png",
   },
@@ -38,7 +46,8 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "font-sans antialiased h-screen bg-[url('/grid.png')] bg-contain bg-start bg-no-repeat",
+          "font-sans antialiased min-h-screen",
+          fontDisplay.variable,
           fontSans.variable,
           fontMono.variable
         )}
