@@ -1,6 +1,6 @@
-"use client"
-import { PopupButton } from "@typeform/embed-react"
-import { IconArrowRight } from "@tabler/icons-react"
+"use client";
+import { PopupButton } from "@typeform/embed-react";
+import { IconArrowRight } from "@tabler/icons-react";
 
 function LetsTalk() {
   return (
@@ -11,7 +11,7 @@ function LetsTalk() {
       {`Let's Talk`}
       <IconArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
     </PopupButton>
-  )
+  );
 }
 
-export default LetsTalk
+export default LetsTalk;

@@ -1,13 +1,22 @@
-import { IconArrowUpRight, IconMenu2 } from "@tabler/icons-react"
-import Image from "next/image"
-import Link from "next/link"
-import { Sheet, SheetClose, SheetContent, SheetTrigger } from "./sheet"
+import { IconArrowUpRight, IconMenu2 } from "@tabler/icons-react";
+import Image from "next/image";
+import Link from "next/link";
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from "./sheet";
 
 function Header() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10 py-5 bg-background/80 backdrop-blur-xl border-b border-border/50">
-      <Link href="/" className="flex items-center hover:opacity-80 transition-opacity duration-300">
-        <Image src="/logo.png" alt="MK" width={36} height={36} className="rounded-lg" />
+      <Link
+        href="/"
+        className="flex items-center hover:opacity-80 transition-opacity duration-300"
+      >
+        <Image
+          src="/logo.png"
+          alt="MK"
+          width={36}
+          height={36}
+          className="rounded-lg"
+        />
       </Link>
 
       {/* Mobile menu */}
@@ -87,7 +96,7 @@ function Header() {
         </Link>
       </div>
     </nav>
-  )
+  );
 }
 
-export default Header
+export default Header;
