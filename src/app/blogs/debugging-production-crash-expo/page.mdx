@@ -1,0 +1,267 @@
+I'm building [Petal](https://apps.apple.com/app/petal-track-subscriptions/id6759523098), a subscription tracker app with Expo. The stack is pretty normal: Expo Router, Zustand, React Query, and a couple of auth providers like Apple and Google.
+
+I shipped a build to TestFlight. The app launched, showed the splash screen, flashed white, and died.
+
+No actionable crash log. No visible error. No screen ever rendered. Just instant failure in production.
+
+What made this bug difficult wasn't the root cause. It was the lack of visibility. I had to debug it by adding observability one layer at a time until the real error finally surfaced.
+
+At one point I was so frustrated that I mentally gave up on the app for a bit. My next plan was going to be the brute-force version of debugging: start cutting features out of the root flow one by one until the crash stopped, then work backward from there.
+
+Then, sometime over the weekend while I was half-watching a random series, it clicked: I didn't need to remove half the app first. I needed a way to make the app show me what was actually failing. That's when the idea of putting an `ErrorBoundary` with a real fallback UI at the root snapped into place.
+
+---
+
+## The Setup
+
+The crash was happening during the first render of my root layout. That was the worst possible place for it to happen because:
+
+- The splash screen was still visible
+- The app only hides it after fonts load and state hydrates
+- No UI had rendered yet, so there was nothing on screen to inspect
+- Console logs from a TestFlight build were basically useless
+
+I wasn't debugging the crash yet. I was debugging how to even _see_ the crash.
+
+---
+
+## Layer 1: Add an Error Boundary
+
+Once that idea landed, the first thing I added was a root-level React `ErrorBoundary`:
+
+```tsx
+const RootLayout = () => {
+  return (
+    <ErrorBoundary label="Root">
+      <FilterProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <QueryProvider>
+            <AppProvider>
+              <ThemeProvider>
+                <Layout />
+                <SystemBars style="auto" />
+              </ThemeProvider>
+            </AppProvider>
+          </QueryProvider>
+        </GestureHandlerRootView>
+      </FilterProvider>
+    </ErrorBoundary>
+  );
+};
+```
+
+I pushed another build expecting at least a readable fallback screen.
+
+Same result: splash screen, white flash, dead app.
+
+At first that made the error boundary look useless, but it actually wasn't. The boundary _was_ catching the error. I just still couldn't see the fallback UI because the splash screen was sitting on top of everything.
+
+That turned out to be the real trap.
+
+---
+
+## Layer 2: The Splash Screen Was Hiding the Error
+
+In Expo, once you call `SplashScreen.preventAutoHideAsync()`, the splash screen stays visible until you manually hide it. My app only hid it after fonts were loaded and persisted state had hydrated:
+
+```tsx
+useEffect(() => {
+  if (loaded && onboarded !== null) {
+    SplashScreen.hideAsync();
+  }
+}, [loaded, onboarded]);
+```
+
+That seems fine until your root layout crashes _before_ this effect runs.
+
+At that point:
+
+- The error boundary catches the error
+- The fallback UI renders
+- `SplashScreen.hideAsync()` never runs
+- The splash screen stays on top and hides the fallback
+
+So the app looked like it had simply crashed with no output, when in reality the error message was there the whole time, hidden behind the splash screen.
+
+The fix was a single line inside `componentDidCatch`:
+
+```tsx
+componentDidCatch(error: Error, info: ErrorInfo) {
+  this.setState({ componentStack: info.componentStack ?? null })
+
+  SplashScreen.hideAsync().catch(() => {})
+
+  console.error("[ErrorBoundary]", error, info.componentStack)
+}
+```
+
+That one call changed the entire debugging experience.
+
+If you use `SplashScreen.preventAutoHideAsync()`, your error boundary should also call `SplashScreen.hideAsync()` when it catches an error. Otherwise you have an error boundary that technically works but can never reveal its UI when you need it most.
+
+---
+
+## Layer 3: Finally Seeing the Real Error
+
+Once the error boundary hid the splash screen, I deployed again and finally got a visible message on device:
+
+> **Something went wrong**  
+> Crashed in: **Root**  
+> Client Id property `iosClientId` must be defined to use Google auth on this platform.
+
+That was it. The production crash came down to one missing environment variable.
+
+What made it worse is that the app was working fine locally. On my machine, the env var was present, so Google auth initialized without any issue. I wasn't even thinking about environment configuration as a possible cause because I didn't realize this was one of those bugs that only shows up once you get into a real production build.
+
+The problem was inside my `useAuth` hook. It was calling `Google.useAuthRequest()` at the top level, which meant it ran on every render of the root layout:
+
+```tsx
+const [_, response, promptAsync] = Google.useAuthRequest({
+  iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
+});
+```
+
+If `iosClientId` is missing, that hook throws synchronously.
+
+The part that made this extra annoying: Google sign-in was already disabled in the UI. The button was commented out. But that didn't matter because hooks still run whether or not you visually expose the feature.
+
+You can't conditionally call React hooks, so the fix wasn't "only call the hook when Google auth is enabled." The fix was to make the hook input safe:
+
+```tsx
+const googleClientId =
+  process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID || "GOOGLE_AUTH_DISABLED";
+```
+
+One missing env var at app startup was enough to take down the entire build.
+
+---
+
+## Bonus Layer: A Suspicious `useMemo`
+
+While tracing the crash, I found another issue that deserved to be removed:
+
+```tsx
+useMemo(() => {
+  StatusBar.setBarStyle(isDark ? "light-content" : "dark-content");
+}, [isDark]);
+```
+
+Two issues:
+
+1. `useMemo` should be pure. `StatusBar.setBarStyle()` is a side effect.
+2. The app was already using `<SystemBars style="auto" />`, so manually setting the status bar style was conflicting behavior.
+
+Even if this wasn't the primary crash, it was exactly the kind of startup code that makes production issues harder to reason about.
+
+---
+
+## What This Taught Me
+
+### 1. Error boundaries are not optional
+
+Without an error boundary, a startup crash is just a dead app. With one, at least you have a visible failure state.
+
+```text
+No ErrorBoundary  -> white screen, confused user, zero context
+ErrorBoundary     -> readable error, component stack, debuggable app
+```
+
+### 2. Your splash screen can hide your error UI
+
+If you manually control the splash screen, make sure failure paths hide it too. Catching the error is only half the job. Revealing it is the other half.
+
+### 3. Hooks run even when the feature looks disabled
+
+If `useAuth()` runs in the root layout, its hooks run whether or not the corresponding button is visible. Guard the inputs, not just the UI.
+
+### 4. `useMemo` is not `useEffect`
+
+`useMemo` is for derived values. `useEffect` is for side effects. Mixing the two creates bugs that often show up only in stricter production conditions.
+
+### 5. AI speeds up coding, not understanding
+
+AI helped me spot issues faster, but the actual work was still the same: make the app observable, read the real error, then fix the root cause.
+
+---
+
+## What I'd Set Up From Day 1 Now
+
+If I were starting a fresh Expo app today, I'd build the debugging surface area in from day 1.
+
+### AI prompts I would keep around
+
+AI is most useful when you give it a specific failure mode to audit:
+
+```text
+Review this root layout for anything that can crash synchronously during app startup.
+Look for:
+- hooks that depend on missing env vars
+- side effects during render
+- providers that can throw before the first screen paints
+- splash screen logic that could block error UI
+- anything that behaves differently in production than in development
+```
+
+```text
+Pretend this app is crashing immediately after the splash screen in a TestFlight build.
+Tell me the top 5 likely synchronous failure points and what observability I should add to confirm each one.
+```
+
+```text
+Review this auth hook as if one provider is misconfigured in production.
+Identify every place a missing env var or platform-specific client ID could throw at startup.
+```
+
+```text
+I use Expo splash screen with preventAutoHideAsync().
+Review my startup flow and tell me every path where the splash screen might remain visible forever.
+```
+
+The key is to ask for concrete crash points and what instrumentation to add, not just generic advice.
+
+### Manual practices I'd enforce from day 1
+
+**1. Put an error boundary at the app root early.**
+
+Make sure it can show a readable error and enough context to tell whether the crash happened during startup or later in the app.
+
+**2. Treat startup code as a danger zone.**
+
+Anything that runs before the first screen paints should be viewed with suspicion:
+
+- auth hooks
+- env var reads
+- font loading
+- storage hydration
+- provider initialization
+- theme/status bar setup
+
+**3. Guard configuration, not just UI.**
+
+If a feature can be turned off, make sure its underlying hooks and setup code can also survive missing config. A hidden button doesn't protect you from a hook that still executes on render.
+
+**4. Keep render paths pure.**
+
+No side effects in render. No side effects in `useMemo`. No "this probably works" imperative calls mixed into derived state logic. Startup code should be especially strict because one impure render path can take down the whole app before any UI appears.
+
+**5. Add lightweight observability before you need it.**
+
+At minimum, make sure you can log caught errors, show a local fallback UI, and tell which startup phase failed.
+
+**6. Force failure paths on purpose.**
+
+Intentionally break things in development: remove an env var, throw in the root layout, or reject a startup promise. Then verify the app fails in a way that is visible and understandable.
+
+**7. Keep a startup checklist.**
+
+Before any release build, I now check: required env vars, disabled feature safety, splash screen dismissal on failure, provider fallbacks, and side effects during render.
+
+### The broader lesson
+
+The best time to think about crash handling is before the first crash. You won't prevent every bug, but you can make sure failures are diagnosable instead of mysterious.
+
+Also, keep an eye out for **Petal**. It's coming soon.
+
+---
+
+_Debug like an archaeologist. Each layer you peel back reveals the next clue._

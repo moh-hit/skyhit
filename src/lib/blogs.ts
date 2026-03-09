@@ -1,4 +1,56 @@
-export const blogs = [
+export interface BlogTag {
+  name: string
+  slug: string
+  color: string
+}
+
+export interface BlogAuthor {
+  name: string
+  image: string
+  slug: string
+}
+
+export interface Blog {
+  title: string
+  description: string
+  author: BlogAuthor
+  image: string
+  slug: string
+  readTime: number
+  tags: BlogTag[]
+  createdAt: number
+  series?: BlogSeriesMeta
+}
+
+export interface RelatedBlog {
+  blog: Blog
+  sharedTags: BlogTag[]
+  score: number
+}
+
+export interface BlogSeriesMeta {
+  id: string
+  title: string
+  description: string
+  part: number
+}
+
+export interface BlogSeriesDetail {
+  id: string
+  title: string
+  description: string
+  blogs: Blog[]
+  currentIndex: number
+}
+
+const subxtractToPetalSeries = {
+  id: "subxtract-to-petal",
+  title: "SubXtract to Petal",
+  description:
+    "Follow the original app, the rebuild, and the production lessons shaping Petal.",
+} as const
+
+export const blogs: Blog[] = [
   {
     title: "Understanding Compound Components in React",
     author: {
@@ -247,6 +299,46 @@ export const blogs = [
       },
     ],
     createdAt: 1771718400000,
+    series: {
+      ...subxtractToPetalSeries,
+      part: 2,
+    },
+  },
+  {
+    title:
+      "My App Was Crashing in Production and I Had No Idea Why",
+    description:
+      "How a missing env variable, a splash screen trap, and a side effect in useMemo led to a production crash — and the debugging methodology that uncovered it all, layer by layer.",
+    author: {
+      name: "Mohit Kumar",
+      image: "/authors/mohit.jpeg",
+      slug: "/authors/mohit",
+    },
+    image: "/blogs/debugging-production-crash-expo/cover.jpg",
+    slug: "/blogs/debugging-production-crash-expo",
+    readTime: 8,
+    tags: [
+      {
+        name: "React Native",
+        slug: "/tags/react-native",
+        color: "text-blue-500",
+      },
+      {
+        name: "Expo",
+        slug: "/tags/expo",
+        color: "text-green-500",
+      },
+      {
+        name: "Debugging",
+        slug: "/tags/debugging",
+        color: "text-red-500",
+      },
+    ],
+    createdAt: 1773100800000,
+    series: {
+      ...subxtractToPetalSeries,
+      part: 3,
+    },
   },
   {
     title: "SubXtract - A Subscription Tracker App",
@@ -282,5 +374,137 @@ export const blogs = [
       },
     ],
     createdAt: 1745073944960,
+    series: {
+      ...subxtractToPetalSeries,
+      part: 1,
+    },
   },
 ];
+
+const STOP_WORDS = new Set([
+  "about",
+  "after",
+  "again",
+  "app",
+  "apps",
+  "build",
+  "building",
+  "debug",
+  "from",
+  "guide",
+  "have",
+  "into",
+  "just",
+  "latest",
+  "learn",
+  "more",
+  "post",
+  "production",
+  "react",
+  "still",
+  "that",
+  "this",
+  "using",
+  "with",
+  "your",
+])
+
+function normalizeTag(value: string) {
+  return value.trim().toLowerCase()
+}
+
+function getKeywordSet(blog: Blog) {
+  return new Set(
+    `${blog.title} ${blog.description}`
+      .toLowerCase()
+      .split(/[^a-z0-9]+/g)
+      .filter((word) => word.length >= 4 && !STOP_WORDS.has(word))
+  )
+}
+
+export function getBlogSeries(slug: string): BlogSeriesDetail | null {
+  const currentBlog = blogs.find((blog) => blog.slug === slug)
+
+  if (!currentBlog?.series) {
+    return null
+  }
+
+  const seriesBlogs = blogs
+    .filter((blog) => blog.series?.id === currentBlog.series?.id)
+    .sort(
+      (a, b) =>
+        (a.series?.part ?? Number.MAX_SAFE_INTEGER) -
+          (b.series?.part ?? Number.MAX_SAFE_INTEGER) ||
+        a.createdAt - b.createdAt
+    )
+
+  return {
+    id: currentBlog.series.id,
+    title: currentBlog.series.title,
+    description: currentBlog.series.description,
+    blogs: seriesBlogs,
+    currentIndex: seriesBlogs.findIndex((blog) => blog.slug === slug),
+  }
+}
+
+export function getRelatedBlogs(slug: string, limit = 3): RelatedBlog[] {
+  const currentBlog = blogs.find((blog) => blog.slug === slug)
+
+  if (!currentBlog) {
+    return []
+  }
+
+  const currentSeriesId = currentBlog.series?.id
+
+  const sortedBlogs = [...blogs].sort((a, b) => b.createdAt - a.createdAt)
+  const currentKeywords = getKeywordSet(currentBlog)
+  const primaryTag = currentBlog.tags[0]
+  const newestCreatedAt = sortedBlogs[0]?.createdAt ?? currentBlog.createdAt
+  const oldestCreatedAt =
+    sortedBlogs[sortedBlogs.length - 1]?.createdAt ?? currentBlog.createdAt
+  const recencyRange = Math.max(1, newestCreatedAt - oldestCreatedAt)
+
+  return sortedBlogs
+    .filter(
+      (blog) =>
+        blog.slug !== slug &&
+        (!currentSeriesId || blog.series?.id !== currentSeriesId)
+    )
+    .map((blog) => {
+      const sharedTags = blog.tags.filter((tag) =>
+        currentBlog.tags.some(
+          (currentTag) =>
+            normalizeTag(currentTag.slug) === normalizeTag(tag.slug) ||
+            normalizeTag(currentTag.name) === normalizeTag(tag.name)
+        )
+      )
+      const sharedKeywordCount = [...getKeywordSet(blog)].filter((keyword) =>
+        currentKeywords.has(keyword)
+      ).length
+      const recencyScore = (blog.createdAt - oldestCreatedAt) / recencyRange
+      const primaryTagBonus = primaryTag
+        ? sharedTags.some(
+            (tag) =>
+              normalizeTag(tag.slug) === normalizeTag(primaryTag.slug) ||
+              normalizeTag(tag.name) === normalizeTag(primaryTag.name)
+          )
+          ? 2
+          : 0
+        : 0
+
+      return {
+        blog,
+        sharedTags,
+        score:
+          sharedTags.length * 6 +
+          primaryTagBonus +
+          sharedKeywordCount * 1.25 +
+          recencyScore,
+      }
+    })
+    .sort(
+      (a, b) =>
+        b.score - a.score || b.blog.createdAt - a.blog.createdAt
+    )
+    .slice(0, limit)
+}
