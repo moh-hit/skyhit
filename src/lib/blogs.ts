@@ -478,8 +478,8 @@ export function getRelatedBlogs(slug: string, limit = 3): RelatedBlog[] {
             normalizeTag(currentTag.name) === normalizeTag(tag.name)
         )
       )
-      const sharedKeywordCount = [...getKeywordSet(blog)].filter((keyword) =>
-        currentKeywords.has(keyword)
+      const sharedKeywordCount = Array.from(getKeywordSet(blog)).filter(
+        (keyword) => currentKeywords.has(keyword)
       ).length
       const recencyScore = (blog.createdAt - oldestCreatedAt) / recencyRange
       const primaryTagBonus = primaryTag
