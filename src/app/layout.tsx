@@ -12,6 +12,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
+const metadataBase = process.env.NEXT_PUBLIC_SITE_URL || "https://skyhit.app";
+
 const fontDisplay = Bricolage_Grotesque({
   subsets: ["latin"],
   variable: "--font-display",
@@ -31,8 +33,8 @@ const fontMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "Mohit Kumar — Software Engineer",
-  description:
-    `Senior Software Engineer with ${getYearsOfExperience()}+ years crafting digital experiences across React, React Native, and Next.js. Currently building at Xurrent IMR.`,
+  description: `Senior Software Engineer with ${getYearsOfExperience()}+ years crafting digital experiences across React, React Native, and Next.js. Currently building at Xurrent IMR.`,
+  metadataBase: new URL(metadataBase),
   openGraph: {
     images: "/logo.png",
   },
