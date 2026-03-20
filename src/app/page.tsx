@@ -330,13 +330,22 @@ export default function Home() {
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
                 <a
-                  href="https://petal.skyhit.app"
+                  href="https://apps.apple.com/in/app/petal-track-subscriptions/id6759523098"
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center justify-center gap-2 bg-foreground text-background font-medium px-6 py-3 rounded-xl hover:opacity-90 transition-opacity text-sm"
                 >
-                  Visit petal.skyhit.app
+                  Download on App Store
                   <IconArrowUpRight className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://petal.skyhit.app"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center gap-2 border border-border text-foreground font-medium px-6 py-3 rounded-xl hover:bg-secondary transition-colors text-sm"
+                >
+                  Visit petal.skyhit.app
+                  <IconArrowRight className="h-3.5 w-3.5" />
                 </a>
                 <Link
                   href="/blogs/from-subxtract-to-petal"
