@@ -1,0 +1,227 @@
+[Petal](https://apps.apple.com/app/petal-track-subscriptions/id6759523098) is live on iOS. It's a subscription tracker app built with Expo, and it's not just a remake of SubXtract — it's the version of this product I would have built if I knew then what I know now.
+
+The last post was the story of why I rebuilt it. This one is about what I built: the architecture choices, the features that stand out, and the patterns that make this app different from a typical subscription tracker.
+
+If you've been following the Petal series, you know the journey. If you're new: I shipped SubXtract under my brother's Apple Developer account, it got pulled when his membership lapsed, and I spent the last year learning how to build smarter. Petal is the result.
+
+---
+
+## What Makes Petal Different
+
+Most subscription trackers are CRUD apps with a nice UI. Track subscriptions, see spending, export a CSV. That's the baseline.
+
+Petal does that, but it also solves problems you don't think about until you actually use one of these apps:
+
+### 1. **Multi-Currency with Real-Time Conversion**
+
+You have Netflix in USD, Spotify in EUR, and Slack in GBP. Most apps make you convert everything manually or just show you raw numbers that don't add up.
+
+Petal supports per-subscription currencies and automatic foreign exchange conversion to your base currency. It has two modes:
+
+- **`convert`**: Every subscription shows its amount in your base currency, converted at real-time rates
+- **`perCurrency`**: Subscriptions stay in their original currencies, giving you clarity on where your money actually goes
+
+This sounds simple until you build it. It requires:
+- Integration with `iso-country-currency` for 180+ currency data
+- Real-time or cached FX rates
+- Display logic that handles both converted and per-currency views
+- Settings that toggle between modes without losing data
+
+Most apps stop here. Petal doesn't.
+
+### 2. **Social Subscription Sharing**
+
+Real life: you share Netflix with your roommate. You split Slack with your cofounder. You split a family plan with your parents.
+
+Petal lets multiple users share subscriptions with configurable split logic:
+
+- **Fixed amount**: "I pay $5, you pay $5"
+- **Percentage-based**: "I pay 60%, you pay 40%"
+- **Equal split**: "We split everything equally"
+
+Users can connect with each other (pending/accepted/blocked states), and shares show up with accept/decline actions. The system tracks who pays what and automatically calculates their portion of the subscription cost.
+
+This is a multi-user sync problem. It requires careful thought about conflict resolution, offline support, and eventual consistency.
+
+### 3. **Trial Period Management**
+
+Trials are their own lifecycle. You want to know when a trial ends, get reminded before it converts to paid, and track the conversion.
+
+Petal has first-class trial support:
+
+```typescript
+trial?: {
+  isActive: boolean
+  endDate: string
+  convertedAt?: string
+  cancelReminderDays: number
+}
+```
+
+When you add a subscription in trial, it's tracked separately. The app reminds you N days before it converts. When it converts, the system records the timestamp and moves it to active status — preserving the trial metadata for analytics.
+
+Most trackers don't separate trials from subscriptions. The cost jumps when the trial ends, and you have to figure it out yourself.
+
+### 4. **Smart Change Queue with Deduplication**
+
+Every data mutation gets queued for backend sync. But if you update a subscription three times in 10 seconds, you don't want three syncs — you want one.
+
+Petal deduplicates changes by table + ID:
+
+```typescript
+export function enqueue(change: PendingChange): void {
+  // Same id+table → replace with the newer change
+  let queue = getQueue().filter(
+    (c) => !(c.id === change.id && c.table === change.table)
+  )
+  queue.push(change)
+
+  if (queue.length > MAX_QUEUE_SIZE) {
+    queue = queue.slice(queue.length - MAX_QUEUE_SIZE)
+  }
+
+  storage.set(QUEUE_KEY, JSON.stringify(queue))
+}
+```
+
+The queue is bounded (max 500 entries) to prevent unbounded growth. When the app reconnects, everything in the queue syncs to the backend. This is local-first architecture without the pain.
+
+### 5. **Advanced Theme Customization**
+
+8 accent colors (Blue, Violet, Rose, Orange, Emerald, Cyan, Amber, Slate) that work in both light and dark modes. Not just the accent color itself — gradients, muted variants, and complementary colors are all generated dynamically.
+
+```typescript
+export function buildTheme(isDark: boolean, accentId: AccentColorId) {
+  const accent = ACCENT_COLORS.find((a) => a.id === accentId)
+
+  return {
+    primary: accent.color,
+    secondary: accent.gradientEnd,
+    accentMuted: isDark ? accent.color + '18' : accent.color + '0C',
+    gradientStart: accent.color,
+    gradientEnd: accent.gradientEnd,
+  }
+}
+```
+
+Each accent color defines a primary and a gradient end. The theme builder then applies opacity intelligently (18% for dark mode, 12% for light mode). This means you can add a new accent color in one place and it automatically works everywhere.
+
+### 6. **Analytics with Monthly Snapshots**
+
+Every month, Petal takes a snapshot of your spending:
+
+- Total by category (Entertainment, Productivity, Streaming, etc.)
+- Highest subscription (which one costs the most?)
+- Monthly trend (is spending going up or down?)
+
+These snapshots are stored separately so you can look back at your spending over time without recalculating historical data.
+
+```typescript
+type MonthlySnapshot = {
+  id: string
+  month: string // "2026-03"
+  totalSpending: number
+  categoryBreakdown: Record<string, number>
+  highestSubscription: Subscription
+  subscriptionCount: number
+  createdAt: string
+}
+```
+
+---
+
+## Architecture: Local-First with MMKV
+
+State management uses Zustand wrapped in React Context, persisted to MMKV (10x faster than AsyncStorage, encrypted by default):
+
+```typescript
+// Context + Store
+const AppContext = createContext<ReturnType<typeof useAppStore>>()
+export const useApp = () => useContext(AppContext) // Type-safe, testable
+
+// Mutations follow the pattern:
+addSubscription: (sub) => {
+  set((state) => ({ subscriptions: [...state.subscriptions, sub] }))
+  enqueue({ id: sub.id, table: 'subscriptions', operation: 'upsert', payload: sub })
+}
+```
+
+Every mutation is queued for backend sync. MMKV handles persistence automatically. The benefit: app stays responsive (optimistic updates), sync happens in the background, and crashes don't lose data.
+
+
+## A Pattern Worth Noting: Trial-to-Subscription Conversion
+
+Most subscription apps don't properly track trial-to-paid conversions. When a trial ends, the cost just jumps and you have to figure it out.
+
+Petal preserves trial metadata through the conversion:
+
+```typescript
+convertTrialToSubscription: (id) => {
+  const sub = get().subscriptions.find((s) => s.id === id)
+  const updated = {
+    ...sub,
+    trial: { ...sub.trial, isActive: false, convertedAt: now },
+  }
+  set((state) => ({ subscriptions: state.subscriptions.map(...) }))
+  enqueue({ id, table: 'subscriptions', operation: 'upsert', payload: updated })
+}
+```
+
+Analytics can later ask "which subscriptions converted from trials?" without extra queries. The domain model documents the full lifecycle.
+
+---
+
+## Core Dependencies
+
+The stack choices reflect the priorities: offline-first, performance, and clarity.
+
+- **Zustand + MMKV**: Minimal state with encrypted persistence
+- **Expo Router**: Type-safe navigation with file-based routing
+- **React Native Reanimated**: 60fps animations off the main thread
+- **expo-auth-session + expo-secure-store**: OAuth + encrypted token storage
+- **date-fns + iso-country-currency**: Timezone-aware dates and 180+ currencies
+- **React Query**: Server state sync without the offline complexity
+
+---
+
+## Performance Wins
+
+**React 19 Compiler**: Automatic memoization of components and derived state — no manual `React.memo()` wrapping needed.
+
+**Reanimated Worklets**: Off-main-thread animations. Even when parsing large subscription lists, animations stay at 60fps.
+
+**Sync MMKV**: Unlike AsyncStorage, MMKV is synchronous. App startup is instant — no loading state while hydrating persisted data.
+
+---
+
+## Lessons
+
+**Specificity up front**: "Multi-currency" is vague. "Per-subscription currencies with FX conversion to base currency + per-currency view" is specific. Specificity forces you to solve the actual UX problem, not a theoretical one.
+
+**Local-first changes how apps *feel***: Optimistic updates, offline support, and sync-in-background aren't just technical choices. They make the difference between an app that feels responsive and one that feels sluggish.
+
+**Theme systems scale or break early**: Build theming from day one. Adding dynamic gradients and muted variants after colors are scattered everywhere is painful.
+
+**Social features are sync problems**: Subscription sharing alone doubled the state management complexity. It introduces conflict resolution, offline queueing, and eventually-consistent semantics. Design for it early.
+
+---
+
+## What's Next
+
+Petal 1.1.2 is live on the [App Store](https://apps.apple.com/app/petal-track-subscriptions/id6759523098) (iOS only for now). It's production-ready, fully featured, and the codebase is clean enough that I'm not embarrassed to look at it.
+
+The next phase is listening to users. What friction are they hitting? What features make them reach for other apps? What do they love about Petal that I should lean into?
+
+The Petal series will continue. Next posts will dive into:
+- Building the social sync system and handling conflict resolution
+- The analytics engine: how Petal tracks spending over time
+- Offline-first architecture: queuing mutations, eventual sync, and recovery
+- Multi-currency complexity: real-time FX, display logic, and data integrity
+
+If you're building a React Native app, you've probably hit some of the same problems. The patterns that power Petal — local-first architecture, context-wrapped stores, theme systems, and production-grade sync — generalize well.
+
+Download Petal, use it, and if you have feedback, you can reach me [@skyhit10](https://x.com/skyhit10) or through the app's feedback form.
+
+---
+
+_Ship it. Listen to users. Ship the next version._

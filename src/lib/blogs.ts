@@ -52,6 +52,46 @@ const subxtractToPetalSeries = {
 
 export const blogs: Blog[] = [
   {
+    title: "Petal is Live: Architecture, Features, and Production Patterns",
+    description:
+      "A deep dive into Petal's architecture: multi-currency support, social subscription sharing, trial management, local-first sync queues, and the design patterns that make it different from typical subscription trackers.",
+    author: {
+      name: "Mohit Kumar",
+      image: "/authors/mohit.jpeg",
+      slug: "/authors/mohit",
+    },
+    image: "/blogs/petal-architecture-production/cover.jpg",
+    slug: "/blogs/petal-architecture-production",
+    readTime: 8,
+    tags: [
+      {
+        name: "React Native",
+        slug: "/tags/react-native",
+        color: "text-blue-500",
+      },
+      {
+        name: "Architecture",
+        slug: "/tags/architecture",
+        color: "text-purple-500",
+      },
+      {
+        name: "Expo",
+        slug: "/tags/expo",
+        color: "text-green-500",
+      },
+      {
+        name: "Production",
+        slug: "/tags/production",
+        color: "text-orange-500",
+      },
+    ],
+    createdAt: 1774454400000,
+    series: {
+      ...subxtractToPetalSeries,
+      part: 4,
+    },
+  },
+  {
     title: "Understanding Compound Components in React",
     author: {
       name: "Mohit Kumar",
