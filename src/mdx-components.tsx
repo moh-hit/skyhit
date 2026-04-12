@@ -76,7 +76,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     img: ({ src, alt }) => (
       <span className="block my-8 rounded-xl overflow-hidden border border-border/50">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={src} alt={alt || ""} className="w-full" />
+        <img src={src} alt={alt || ""} className="w-full max-h-[600px] object-contain" />
       </span>
     ),
     ...components,

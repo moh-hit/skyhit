@@ -46,6 +46,14 @@ function Header() {
             </SheetClose>
             <SheetClose asChild>
               <Link
+                href="/projects"
+                className="font-display text-2xl text-foreground hover:text-primary transition-colors"
+              >
+                Projects
+              </Link>
+            </SheetClose>
+            <SheetClose asChild>
+              <Link
                 href="/blogs"
                 className="font-display text-2xl text-foreground hover:text-primary transition-colors"
               >
@@ -79,6 +87,12 @@ function Header() {
           className="link-hover text-muted-foreground hover:text-foreground transition-colors duration-300 uppercase"
         >
           Work
+        </Link>
+        <Link
+          href="/projects"
+          className="link-hover text-muted-foreground hover:text-foreground transition-colors duration-300 uppercase"
+        >
+          Projects
         </Link>
         <Link
           href="/blogs"

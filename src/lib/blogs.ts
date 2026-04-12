@@ -43,6 +43,13 @@ export interface BlogSeriesDetail {
   currentIndex: number
 }
 
+const maffsSeries = {
+  id: "maffs-journey",
+  title: "The Maffs Series",
+  description:
+    "Building and shipping a scientific calculator with AI, in-app purchases, and 6 rejections.",
+} as const
+
 const subxtractToPetalSeries = {
   id: "subxtract-to-petal",
   title: "SubXtract to Petal",
@@ -51,6 +58,88 @@ const subxtractToPetalSeries = {
 } as const
 
 export const blogs: Blog[] = [
+  {
+    title:
+      "Inside Maffs: Building a Scientific Calculator with AI, Graphs, and 6 Themes",
+    description:
+      "A technical deep-dive into Maffs — the recursive descent parser, AI-powered Nerd Mode, interactive graph plotting, unit conversion, theme system, and the paywall that ties it all together.",
+    author: {
+      name: "Mohit Kumar",
+      image: "/authors/mohit.jpeg",
+      slug: "/authors/mohit",
+    },
+    image: "/blogs/maffs-under-the-hood/cover.jpg",
+    slug: "/blogs/maffs-under-the-hood",
+    readTime: 12,
+    tags: [
+      {
+        name: "React Native",
+        slug: "/tags/react-native",
+        color: "text-blue-500",
+      },
+      {
+        name: "Architecture",
+        slug: "/tags/architecture",
+        color: "text-purple-500",
+      },
+      {
+        name: "AI",
+        slug: "/tags/ai",
+        color: "text-green-500",
+      },
+      {
+        name: "Expo",
+        slug: "/tags/expo",
+        color: "text-orange-500",
+      },
+    ],
+    createdAt: 1775232000000,
+    series: {
+      ...maffsSeries,
+      part: 2,
+    },
+  },
+  {
+    title:
+      "6 Rejections, 1 Approval: Shipping In-App Purchases with React Native & RevenueCat",
+    description:
+      "The full story of getting Maffs through Apple App Review — from RevenueCat cache bugs and missing legal links to Paid Apps Agreement gotchas and duplicate build numbers.",
+    author: {
+      name: "Mohit Kumar",
+      image: "/authors/mohit.jpeg",
+      slug: "/authors/mohit",
+    },
+    image: "/blogs/maffs-iap-journey/cover.jpg",
+    slug: "/blogs/maffs-iap-journey",
+    readTime: 10,
+    tags: [
+      {
+        name: "React Native",
+        slug: "/tags/react-native",
+        color: "text-blue-500",
+      },
+      {
+        name: "IAP",
+        slug: "/tags/iap",
+        color: "text-yellow-500",
+      },
+      {
+        name: "App Store",
+        slug: "/tags/app-store",
+        color: "text-red-500",
+      },
+      {
+        name: "Expo",
+        slug: "/tags/expo",
+        color: "text-orange-500",
+      },
+    ],
+    createdAt: 1775145600000,
+    series: {
+      ...maffsSeries,
+      part: 1,
+    },
+  },
   {
     title: "Petal is Live: Architecture, Features, and Production Patterns",
     description:

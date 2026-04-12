@@ -3,6 +3,7 @@ import NowPlaying from "@/components/now-playing";
 import GitHubStats from "@/components/github-stats";
 import { work, getYearsOfExperience } from "@/lib/work";
 import { blogs } from "@/lib/blogs";
+import Image from "next/image";
 import Link from "next/link";
 import {
   IconArrowRight,
@@ -298,22 +299,107 @@ export default function Home() {
 
       <div className="section-divider mx-6 md:mx-10" />
 
-      {/* ── Project ── */}
+      {/* ── Projects ── */}
       <section className="px-6 md:px-10 py-20 md:py-28">
         <div className="max-w-6xl mx-auto w-full">
           <div className="flex items-baseline justify-between mb-12 md:mb-16">
             <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight">
-              PROJECT
+              PROJECTS
             </h2>
+            <Link
+              href="/projects"
+              className="inline-flex items-center gap-2 font-mono text-sm text-muted-foreground hover:text-primary transition-colors group"
+            >
+              View all
+              <IconArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
 
-          <div className="border border-border rounded-2xl p-8 md:p-12 hover:border-primary/30 transition-colors duration-500">
-            <div className="flex-1">
-              <h3 className="font-display text-2xl md:text-3xl font-bold mb-3">
-                Petal
-              </h3>
+          <div className="space-y-8">
+            {/* Maffs */}
+            <div className="border border-border rounded-2xl p-8 md:p-12 hover:border-primary/30 transition-colors duration-500">
+              <div className="flex items-start gap-5 mb-5">
+                <Image
+                  src="/projects/maffs-icon.png"
+                  alt="Maffs app icon"
+                  width={56}
+                  height={56}
+                  className="rounded-2xl shrink-0"
+                />
+                <div>
+                  <h3 className="font-display text-2xl md:text-3xl font-bold mb-1">
+                    Maffs
+                  </h3>
+                  <p className="font-mono text-sm text-muted-foreground">
+                    Scientific Calculator with AI, Graphs & 6 Themes
+                  </p>
+                </div>
+              </div>
               <p className="text-muted-foreground text-lg max-w-lg mb-6">
-                A subscription tracker app that helps you stay on top of
+                A calculator app that goes beyond the basics — featuring AI-powered Nerd Mode, interactive graphs, unit conversion, and a theme system where every theme has its own personality.
+              </p>
+              <div className="flex flex-wrap gap-2 mb-8">
+                {["React Native", "Expo", "RevenueCat", "Claude AI", "Zustand"].map(
+                  (tech) => (
+                    <span
+                      key={tech}
+                      className="font-mono text-xs text-muted-foreground bg-secondary border border-border px-3 py-1.5 rounded-lg"
+                    >
+                      {tech}
+                    </span>
+                  ),
+                )}
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <a
+                  href="https://apps.apple.com/us/app/maffs-calculator-more/id6760940442"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center gap-2 bg-foreground text-background font-medium px-6 py-3 rounded-xl hover:opacity-90 transition-opacity text-sm"
+                >
+                  Download on App Store
+                  <IconArrowUpRight className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://maffs.skyhit.app"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center gap-2 border border-border text-foreground font-medium px-6 py-3 rounded-xl hover:bg-secondary transition-colors text-sm"
+                >
+                  Visit maffs.skyhit.app
+                  <IconArrowRight className="h-3.5 w-3.5" />
+                </a>
+                <Link
+                  href="/blogs/maffs-iap-journey"
+                  className="inline-flex items-center justify-center gap-2 border border-border text-foreground font-medium px-6 py-3 rounded-xl hover:bg-secondary transition-colors text-sm"
+                >
+                  Read the story
+                  <IconArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Petal */}
+            <div className="border border-border rounded-2xl p-8 md:p-12 hover:border-primary/30 transition-colors duration-500">
+              <div className="flex items-start gap-5 mb-5">
+                <Image
+                  src="/projects/petal-icon.png"
+                  alt="Petal app icon"
+                  width={56}
+                  height={56}
+                  className="rounded-2xl shrink-0"
+                />
+                <div>
+                  <h3 className="font-display text-2xl md:text-3xl font-bold mb-1">
+                    Petal
+                  </h3>
+                  <p className="font-mono text-sm text-muted-foreground">
+                    Track Subscriptions, Save Money
+                  </p>
+                </div>
+              </div>
+              <p className="text-muted-foreground text-lg max-w-lg mb-6">
+                A subscription tracker that helps you stay on top of
                 recurring payments. Built with React Native, Expo, and Zustand.
               </p>
               <div className="flex flex-wrap gap-2 mb-8">
