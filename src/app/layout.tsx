@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Bricolage_Grotesque,
-  Instrument_Sans,
-  JetBrains_Mono,
-} from "next/font/google";
+import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { getYearsOfExperience } from "@/lib/work";
@@ -14,17 +10,18 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const metadataBase = process.env.NEXT_PUBLIC_SITE_URL || "https://skyhit.app";
 
-const fontDisplay = Bricolage_Grotesque({
+// Hanken Grotesk — modern grotesque for headings & body
+const fontDisplay = Hanken_Grotesk({
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["200", "300", "400", "500", "600", "700", "800"],
 });
 
-const fontSans = Instrument_Sans({
+const fontSans = Hanken_Grotesk({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
+// JetBrains Mono — reserved for the technical chrome (labels, meta, code)
 const fontMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",

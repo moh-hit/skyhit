@@ -48,17 +48,19 @@ export default function NowPlaying() {
 
   if (!data.isPlaying) {
     return (
-      <div className="inline-flex items-center gap-3 border border-border bg-secondary/40 rounded-xl px-3 py-2.5 w-fit">
-        <div className="shrink-0 w-9 h-9 rounded-md bg-muted flex items-center justify-center">
-          <IconBrandSpotify className="h-4 w-4 text-muted-foreground/40" />
-        </div>
-        <div className="flex flex-col gap-0.5">
-          <span className="font-mono text-[10px] text-muted-foreground/40 uppercase tracking-widest leading-none">
-            Spotify
-          </span>
-          <span className="font-mono text-sm text-muted-foreground leading-tight">
+      <div className="flex w-full overflow-hidden rounded-md border border-border bg-card/60">
+        <span className="w-1 self-stretch bg-muted-foreground/30 shrink-0" />
+        <div className="flex-1 min-w-0 px-3 py-2">
+          <div className="flex items-center gap-1.5 mb-1 font-mono text-[10px] lowercase tracking-widest text-muted-foreground/70">
+            <IconBrandSpotify className="h-3 w-3 text-muted-foreground/50 shrink-0" />
+            <span>spotify</span>
+            <span className="ml-auto tracking-normal text-muted-foreground/40">
+              idle
+            </span>
+          </div>
+          <p className="font-mono text-xs text-muted-foreground truncate">
             probably debugging in silence
-          </span>
+          </p>
         </div>
       </div>
     );
@@ -69,43 +71,38 @@ export default function NowPlaying() {
       href={data.songUrl}
       target="_blank"
       rel="noreferrer"
-      className="group inline-flex items-center gap-3 border border-border hover:border-primary/30 bg-secondary/40 hover:bg-secondary/70 rounded-xl px-3 py-2.5 transition-all duration-300 w-fit"
+      className="group flex w-full overflow-hidden rounded-md border border-border bg-card/60 hover:border-primary/40 transition-colors duration-300"
     >
+      <span className="w-1 self-stretch bg-emerald-500/70 shrink-0" />
+
       {/* Album art */}
-      {data.albumImageUrl ? (
-        <div className="relative shrink-0 w-9 h-9 rounded-md overflow-hidden">
+      {data.albumImageUrl && (
+        <div className="relative w-11 self-stretch shrink-0">
           <Image
             src={data.albumImageUrl}
             alt="Album art"
             fill
-            sizes="36px"
+            sizes="44px"
             className="object-cover"
           />
         </div>
-      ) : (
-        <div className="shrink-0 w-9 h-9 rounded-md bg-muted flex items-center justify-center">
-          <IconBrandSpotify className="h-4 w-4 text-muted-foreground" />
-        </div>
       )}
 
-      {/* Track info */}
-      <div className="flex flex-col gap-0.5 min-w-0">
-        <div className="flex items-center gap-1.5">
+      <div className="flex-1 min-w-0 px-3 py-2">
+        <div className="flex items-center gap-1.5 mb-1 font-mono text-[10px] lowercase tracking-widest">
           <IconBrandSpotify className="h-3 w-3 text-emerald-500 shrink-0" />
-          <span className="font-mono text-[10px] text-emerald-500 uppercase tracking-widest leading-none">
-            Now Playing
+          <span className="text-emerald-500">now playing</span>
+          <span className="ml-auto">
+            <PlayingBars />
           </span>
         </div>
-        <span className="font-mono text-sm text-foreground leading-tight truncate max-w-[160px]">
+        <p className="font-mono text-xs text-foreground truncate">
           {data.title}
-        </span>
-        <span className="font-mono text-xs text-muted-foreground leading-tight truncate max-w-[160px]">
+        </p>
+        <p className="font-mono text-[11px] text-muted-foreground truncate">
           {data.artist}
-        </span>
+        </p>
       </div>
-
-      {/* Animated bars */}
-      <PlayingBars />
     </a>
   );
 }

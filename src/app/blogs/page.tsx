@@ -5,125 +5,98 @@ import Link from "next/link"
 
 function BlogsPage() {
   const sortedBlogs = [...blogs].sort((a, b) => b.createdAt - a.createdAt)
-  const featured = sortedBlogs[0]
-  const rest = sortedBlogs.slice(1)
 
   return (
-    <main className="min-h-screen pt-28 pb-20 px-6 md:px-10">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-16 md:mb-24">
-          <h1 className="font-display text-5xl md:text-7xl font-bold tracking-tight mb-6">
-            BLOG
-          </h1>
-          <p className="text-muted-foreground text-lg md:text-xl max-w-2xl leading-relaxed">
-            Thoughts on React, React Native, and the craft of building
-            software.
-          </p>
+    <main>
+      <div className="max-w-3xl mx-auto frame-x min-h-screen px-6 md:px-10 pt-28 md:pt-32 pb-20">
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-2 font-mono text-xs text-muted-foreground mb-14">
+          <Link href="/" className="hover:text-primary transition-colors">
+            ~
+          </Link>
+          <span className="text-muted-foreground/40">/</span>
+          <span className="text-foreground">blogs</span>
         </div>
 
-        {/* Featured post */}
-        <Link href={featured.slug} className="group block mb-16 md:mb-24">
-          <div className="flex flex-col md:flex-row gap-8 md:gap-12 border border-border rounded-2xl p-6 md:p-8 hover:border-primary/30 transition-all duration-500">
-            <div className="relative w-full md:w-80 h-52 md:h-auto rounded-xl overflow-hidden flex-shrink-0">
-              <Image
-                src={featured.image}
-                alt={featured.title}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
-              />
-            </div>
-            <div className="flex flex-col justify-center flex-1">
-              <div className="flex items-center gap-3 mb-4">
-                <span className="font-mono text-xs text-primary uppercase tracking-wider">
-                  Latest
-                </span>
-                <span className="font-mono text-xs text-muted-foreground">
-                  {new Date(featured.createdAt).toLocaleDateString("en-US", {
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </span>
-              </div>
-              <h2 className="font-display text-2xl md:text-3xl font-bold mb-4 group-hover:text-primary transition-colors">
-                {featured.title}
-              </h2>
-              <p className="text-muted-foreground line-clamp-3 mb-6">
-                {featured.description}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {featured.tags.map(({ name }) => (
-                  <span
-                    key={name}
-                    className="font-mono text-xs text-muted-foreground bg-secondary px-3 py-1 rounded-lg"
-                  >
-                    {name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </Link>
+        {/* Header */}
+        <header className="mb-12 md:mb-16 animate-fade-in-up">
+          <h1 className="font-display text-5xl md:text-7xl font-bold lowercase tracking-tight leading-none">
+            blogs
+          </h1>
+          <p className="font-sans text-lg md:text-xl text-muted-foreground mt-6 max-w-xl leading-relaxed">
+            Notes on React, React Native, and the craft of building software.
+          </p>
+        </header>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-          {rest.map(
-            ({ title, description, image, slug, tags, createdAt }) => (
-              <Link
-                key={slug}
-                href={slug}
-                className="group flex flex-col border border-border rounded-2xl overflow-hidden hover:border-primary/30 transition-all duration-500"
-              >
-                <div className="relative w-full h-48 overflow-hidden">
-                  <Image
-                    src={image}
-                    alt={title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-                  <div className="absolute bottom-4 left-4 font-mono text-xs text-foreground/80">
+        {/* Card grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
+          {sortedBlogs.map(({ title, description, image, slug, tags, createdAt, readTime }, i) => (
+            <Link
+              key={slug}
+              href={slug}
+              className="group flex flex-col rounded-xl border border-border overflow-hidden hover:border-primary/40 transition-colors duration-300 animate-fade-in-up"
+              style={{ animationDelay: `${0.04 * (i + 1)}s` }}
+            >
+              {/* Cover */}
+              <div className="relative aspect-[16/10] overflow-hidden">
+                <Image
+                  src={image}
+                  alt={title}
+                  fill
+                  priority={i === 0}
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                {i === 0 && (
+                  <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 font-mono text-[10px] lowercase text-primary bg-background/80 backdrop-blur border border-primary/30 px-2 py-1 rounded">
+                    <span className="w-1 h-1 bg-primary rounded-full" />
+                    latest
+                  </span>
+                )}
+              </div>
+
+              {/* Body */}
+              <div className="flex flex-col flex-1 p-5">
+                <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground mb-2">
+                  <span>
                     {new Date(createdAt).toLocaleDateString("en-US", {
                       month: "short",
-                      day: "numeric",
                       year: "numeric",
                     })}
-                  </div>
+                  </span>
+                  <span className="text-muted-foreground/40">·</span>
+                  <span>{readTime} min</span>
                 </div>
-                <div className="flex flex-col flex-1 p-6">
-                  <h3 className="font-display text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
-                    {title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm line-clamp-2 mb-4 flex-1">
-                    {description}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex flex-wrap gap-1.5">
-                      {tags.slice(0, 2).map(({ name }) => (
-                        <span
-                          key={name}
-                          className="font-mono text-[10px] text-muted-foreground bg-secondary px-2 py-0.5 rounded"
-                        >
-                          {name}
-                        </span>
-                      ))}
-                    </div>
-                    <IconArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                  </div>
-                </div>
-              </Link>
-            )
-          )}
+
+                <h2 className="font-display text-base md:text-lg font-bold tracking-tight leading-snug group-hover:text-primary transition-colors line-clamp-2">
+                  {title}
+                </h2>
+
+                <p className="font-sans text-sm text-foreground/55 leading-relaxed line-clamp-2 mt-2">
+                  {description}
+                </p>
+
+                <p className="font-mono text-[11px] text-muted-foreground/50 lowercase mt-4 pt-3 dashed-t">
+                  {tags.slice(0, 3).map(({ name }) => name).join("  ·  ")}
+                </p>
+              </div>
+            </Link>
+          ))}
         </div>
 
-        {/* Back link */}
-        <div className="mt-16 pt-8 border-t border-border/50">
+        {/* Footer nav */}
+        <div className="mt-16 pt-6 dashed-t flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-xs lowercase">
           <Link
             href="/"
-            className="font-mono text-sm text-muted-foreground hover:text-primary transition-colors"
+            className="text-muted-foreground hover:text-primary transition-colors"
           >
-            &larr; Back home
+            ← back home
+          </Link>
+          <Link
+            href="/projects"
+            className="group inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+          >
+            see my projects
+            <IconArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </div>
