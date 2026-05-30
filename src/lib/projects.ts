@@ -1,3 +1,5 @@
+import { IconGitPullRequest, IconTerminal2, TablerIcon } from "@tabler/icons-react"
+
 export interface ProjectLink {
   label: string
   href: string
@@ -8,7 +10,8 @@ export interface Project {
   name: string
   tagline: string
   description: string
-  icon: string
+  icon?: string
+  iconComponent?: TablerIcon
   slug: string
   stack: string[]
   features: string[]
@@ -106,5 +109,53 @@ export const projects: Project[] = [
     ],
     status: "Live",
     color: "#B8F26D",
+  },
+  {
+    name: "Pulley",
+    tagline: "GitHub PRs in your macOS menu bar",
+    description:
+      "A tiny native macOS menu-bar app that keeps all your open GitHub pull requests one click away. Each PR's branch is checked out as a git worktree, so your main checkout stays clean while you review and switch context freely.",
+    iconComponent: IconGitPullRequest,
+    slug: "pulley",
+    stack: ["Swift", "macOS", "GitHub API", "Git Worktrees"],
+    features: [
+      "Menu-bar access to all open pull requests at a glance",
+      "One-click branch checkout as an isolated git worktree",
+      "Main checkout always stays untouched",
+      "Lightweight native Swift app — no Electron",
+    ],
+    links: [
+      {
+        label: "GitHub",
+        href: "https://github.com/moh-hit/pulley",
+        external: true,
+      },
+    ],
+    status: "Live",
+    color: "#6E40C9",
+  },
+  {
+    name: "LocalPorts",
+    tagline: "A beautiful TUI for managing localhost ports on macOS",
+    description:
+      "An interactive terminal UI for finding, inspecting, and killing processes bound to localhost ports. Cuts the mental overhead of juggling dev servers and stale processes — all from a single, beautiful command.",
+    iconComponent: IconTerminal2,
+    slug: "localports",
+    stack: ["TypeScript", "Node.js"],
+    features: [
+      "Interactive TUI listing all active localhost ports",
+      "Kill processes directly without memorizing lsof flags",
+      "Process name, PID, and port at a glance",
+      "Fast, dependency-light CLI tool",
+    ],
+    links: [
+      {
+        label: "GitHub",
+        href: "https://github.com/moh-hit/localports",
+        external: true,
+      },
+    ],
+    status: "Live",
+    color: "#22C55E",
   },
 ]

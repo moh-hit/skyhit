@@ -1,255 +1,155 @@
 import { work, getYearsOfExperience } from "@/lib/work";
-import { IconArrowUpRight, IconArrowRight } from "@tabler/icons-react";
+import { IconArrowRight, IconArrowUpRight } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 
-function getDuration(joined: string, current: boolean): string {
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const parts = joined.split(" ");
-  const monthIndex = months.indexOf(parts[0]);
-  const year = parseInt(parts[1]);
-  const start = new Date(year, monthIndex);
-  const end = current
-    ? new Date()
-    : (() => {
-        const idx = work.findIndex((w) => w.joined === joined);
-        if (idx > 0) {
-          const prev = work[idx - 1].joined.split(" ");
-          return new Date(parseInt(prev[1]), months.indexOf(prev[0]));
-        }
-        return new Date();
-      })();
+function shortDate(joined: string): string {
+  const [month, year] = joined.split(" ");
+  const abbr = month?.slice(0, 3) ?? month;
+  return `${abbr} ${year}`;
+}
 
-  const diffMonths =
-    (end.getFullYear() - start.getFullYear()) * 12 +
-    (end.getMonth() - start.getMonth());
-  const years = Math.floor(diffMonths / 12);
-  const remainingMonths = diffMonths % 12;
-
-  if (years > 0 && remainingMonths > 0) return `${years}y ${remainingMonths}m`;
-  if (years > 0) return `${years}y`;
-  return `${remainingMonths}m`;
+function endDate(idx: number): string {
+  // work is ordered most-recent-first: the previous index is the next job,
+  // whose start marks the end of this one.
+  return idx > 0 ? shortDate(work[idx - 1].joined) : "now";
 }
 
 function WorkPage() {
+  const techCount = Array.from(
+    new Set(work.flatMap((w) => w.stack.map((s) => s.name))),
+  ).length;
+
+  const stats = [
+    { value: `${getYearsOfExperience()}+`, label: "years", accent: true },
+    { value: work.length, label: "companies" },
+    { value: techCount, label: "technologies" },
+    { value: 3, label: "industries" },
+  ];
+
   return (
-    <main className="min-h-screen pt-28 pb-20 px-6 md:px-10">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-16 md:mb-24">
-          <div className="flex items-center gap-4 mb-6">
-            <Link
-              href="/"
-              className="font-mono text-sm text-muted-foreground hover:text-primary transition-colors"
-            >
-              &larr; Home
-            </Link>
-            <span className="text-border">/</span>
-            <span className="font-mono text-sm text-muted-foreground">
-              Work
-            </span>
-          </div>
-          <h1 className="font-display text-5xl md:text-7xl font-bold tracking-tight mb-6 animate-fade-in-up">
-            WORK
-          </h1>
-          <p className="text-muted-foreground text-lg md:text-xl max-w-2xl leading-relaxed animate-fade-in-up delay-1">
-            {`Over ${getYearsOfExperience()}+ years I've had the privilege of building products across
-            fintech, gaming, SaaS, and real estate — always pushing the
-            boundaries of what's possible on the web and mobile.`}
-          </p>
+    <main>
+      <div className="max-w-3xl mx-auto frame-x min-h-screen px-6 md:px-10 pt-28 md:pt-32 pb-20">
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-2 font-mono text-xs text-muted-foreground mb-14">
+          <Link href="/" className="hover:text-primary transition-colors">
+            ~
+          </Link>
+          <span className="text-muted-foreground/40">/</span>
+          <span className="text-foreground">work</span>
         </div>
 
-        {/* Timeline */}
-        <div className="relative">
-          {/* Vertical timeline line */}
-          <div className="absolute left-5 md:left-7 top-0 bottom-0 w-px">
-            <div className="w-full h-full bg-gradient-to-b from-primary/50 via-border to-transparent timeline-line" />
-          </div>
+        {/* Header */}
+        <header className="mb-16 md:mb-24 animate-fade-in-up">
+          <h1 className="font-display text-5xl md:text-7xl font-bold lowercase tracking-tight leading-none">
+            work
+          </h1>
+          <p className="font-sans text-lg md:text-xl text-muted-foreground mt-6 max-w-xl leading-relaxed">
+            Over {getYearsOfExperience()}+ years building products across
+            fintech, gaming, SaaS, and real estate — on web and mobile.
+          </p>
+        </header>
 
-          {/* Work entries */}
-          <div className="flex flex-col">
-            {work.map(
-              (
-                {
-                  title,
-                  position,
-                  description,
-                  image,
-                  url,
-                  joined,
-                  stack,
-                  current,
-                },
-                i,
-              ) => (
-                <div
-                  key={title}
-                  className="relative pl-14 md:pl-20 pb-16 md:pb-20 last:pb-0 group animate-fade-in-up"
-                  style={{ animationDelay: `${0.15 * (i + 1)}s` }}
-                >
-                  {/* Timeline node */}
-                  <div className="absolute left-[0.625rem] md:left-[1.125rem] top-1 z-10">
-                    {current ? (
-                      <div className="relative">
-                        <div className="w-5 h-5 rounded-full bg-primary border-4 border-background" />
-                        <div className="absolute inset-0 w-5 h-5 rounded-full bg-primary/40 animate-ping" />
-                      </div>
-                    ) : (
-                      <div className="w-5 h-5 rounded-full bg-secondary border-2 border-border group-hover:border-primary/50 transition-colors" />
-                    )}
-                  </div>
+        {/* Entries */}
+        <div>
+          {work.map(
+            ({ title, position, description, image, url, joined, stack, current }, i) => (
+              <article
+                key={title}
+                className="group py-10 md:py-14 dashed-t first:border-t-0 first:pt-0 animate-fade-in-up"
+                style={{ animationDelay: `${0.1 * (i + 1)}s` }}
+              >
+                <div className="flex items-start gap-5">
+                  {/* Logo */}
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="shrink-0 group/logo"
+                  >
+                    <div className="relative w-12 h-12 md:w-14 md:h-14 rounded-2xl border border-border bg-secondary overflow-hidden flex items-center justify-center group-hover/logo:border-primary/40 transition-colors">
+                      <Image
+                        src={image}
+                        alt={title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  </a>
 
-                  {/* Duration badge */}
-                  <div className="flex items-center gap-3 mb-5">
-                    <span className="font-mono text-xs text-muted-foreground bg-secondary border border-border px-2.5 py-1 rounded-md">
-                      {joined}
-                    </span>
-                    <span className="font-mono text-[10px] text-muted-foreground">
-                      {getDuration(joined, current)}
-                    </span>
-                    {current && (
-                      <span className="inline-flex items-center gap-1.5 text-[10px] font-mono text-emerald-500 bg-emerald-500/10 px-2.5 py-1 rounded-full">
-                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                        PRESENT
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Card */}
-                  <div className="border border-border rounded-2xl p-6 md:p-8 hover:border-primary/20 transition-all duration-500 bg-card/30">
-                    <div className="flex flex-col md:flex-row gap-6 md:gap-10">
-                      {/* Company logo + link */}
-                      <div className="flex-shrink-0">
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline justify-between gap-4 mb-1.5">
+                      <h2 className="font-display text-2xl md:text-3xl font-bold tracking-tight">
                         <a
                           href={url}
                           target="_blank"
                           rel="noreferrer"
-                          className="block group/logo"
+                          className="inline-flex items-center gap-2 hover:text-primary transition-colors"
                         >
-                          <div className="relative w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-secondary rounded-[1.25rem] overflow-hidden border border-border group-hover/logo:border-primary/30 transition-colors">
-                            <Image
-                              src={image}
-                              alt={title}
-                              fill
-                              className="p-2 rounded-[1.25rem] overflow-hidden"
-                            />
-                          </div>
+                          {title}
+                          <IconArrowUpRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                         </a>
-                      </div>
-
-                      {/* Details */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-2">
-                          <h2 className="font-display text-xl md:text-2xl font-bold">
-                            {title}
-                          </h2>
-                          <a
-                            href={url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-1 font-mono text-xs text-muted-foreground hover:text-primary transition-colors w-fit"
-                          >
-                            Visit
-                            <IconArrowUpRight className="h-3 w-3" />
-                          </a>
-                        </div>
-
-                        <p className="text-sm text-primary font-mono uppercase tracking-wider mb-4">
-                          {position}
-                        </p>
-
-                        <p className="text-muted-foreground text-base leading-relaxed mb-6">
-                          {description}
-                        </p>
-
-                        {/* Tech stack */}
-                        <div className="flex flex-wrap gap-2">
-                          {stack.map(({ name }) => (
-                            <span
-                              key={name}
-                              className="font-mono text-xs text-muted-foreground bg-secondary border border-border px-3 py-1.5 rounded-lg hover:border-primary/30 transition-colors"
-                            >
-                              {name}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
+                      </h2>
+                      <span className="font-mono text-xs md:text-sm text-muted-foreground shrink-0 whitespace-nowrap">
+                        {shortDate(joined)} —{" "}
+                        {current ? (
+                          <span className="text-primary">now</span>
+                        ) : (
+                          endDate(i)
+                        )}
+                      </span>
                     </div>
+
+                    <p className="font-mono text-sm text-primary lowercase mb-5">
+                      {position}
+                    </p>
+
+                    <p className="font-sans text-base md:text-lg text-foreground/70 leading-relaxed max-w-2xl mb-5">
+                      {description}
+                    </p>
+
+                    <p className="font-mono text-xs text-muted-foreground/60 leading-relaxed">
+                      {stack.map((s) => s.name).join("  ·  ")}
+                    </p>
                   </div>
                 </div>
-              ),
-            )}
-          </div>
+              </article>
+            ),
+          )}
         </div>
 
-        {/* Career stats */}
-        <div className="mt-20 pt-12 border-t border-border">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            <div className="animate-fade-in-up delay-2">
-              <span className="font-display text-3xl md:text-4xl font-bold text-primary">
-                {getYearsOfExperience()}+
-              </span>
-              <p className="font-mono text-xs text-muted-foreground mt-1 uppercase tracking-wider">
-                Years
-              </p>
+        {/* Stats */}
+        <div className="mt-20 pt-12 dashed-t flex flex-wrap gap-x-12 md:gap-x-16 gap-y-8">
+          {stats.map(({ value, label, accent }) => (
+            <div key={label}>
+              <div
+                className={`font-display text-4xl md:text-5xl font-bold tracking-tight ${
+                  accent ? "text-primary" : "text-foreground"
+                }`}
+              >
+                {value}
+              </div>
+              <div className="font-mono text-xs text-muted-foreground mt-2 lowercase">
+                {label}
+              </div>
             </div>
-            <div className="animate-fade-in-up delay-3">
-              <span className="font-display text-3xl md:text-4xl font-bold text-foreground">
-                {work.length}
-              </span>
-              <p className="font-mono text-xs text-muted-foreground mt-1 uppercase tracking-wider">
-                Companies
-              </p>
-            </div>
-            <div className="animate-fade-in-up delay-4">
-              <span className="font-display text-3xl md:text-4xl font-bold text-foreground">
-                {
-                  Array.from(
-                    new Set(work.flatMap((w) => w.stack.map((s) => s.name))),
-                  ).length
-                }
-              </span>
-              <p className="font-mono text-xs text-muted-foreground mt-1 uppercase tracking-wider">
-                Technologies
-              </p>
-            </div>
-            <div className="animate-fade-in-up delay-5">
-              <span className="font-display text-3xl md:text-4xl font-bold text-foreground">
-                3
-              </span>
-              <p className="font-mono text-xs text-muted-foreground mt-1 uppercase tracking-wider">
-                Industries
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
 
         {/* Footer nav */}
-        <div className="mt-16 pt-8 border-t border-border/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="mt-16 pt-6 dashed-t flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-xs lowercase">
           <Link
             href="/"
-            className="font-mono text-sm text-muted-foreground hover:text-primary transition-colors"
+            className="text-muted-foreground hover:text-primary transition-colors"
           >
-            &larr; Back home
+            ← back home
           </Link>
           <Link
             href="/blogs"
-            className="inline-flex items-center gap-2 font-mono text-sm text-muted-foreground hover:text-primary transition-colors group"
+            className="group inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
           >
-            Read my blog
+            read my blogs
             <IconArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>

@@ -27,7 +27,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h6 className="font-display text-sm font-semibold mt-4 mb-2 text-muted-foreground">{children}</h6>
     ),
     p: ({ children }) => (
-      <p className="text-base md:text-lg leading-relaxed text-foreground/90 mb-5">
+      <p className="font-sans text-base md:text-lg leading-relaxed text-foreground/80 mb-5">
         {children}
       </p>
     ),
@@ -53,7 +53,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       </pre>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="border-l-2 border-primary/50 pl-5 my-6 text-muted-foreground italic">
+      <blockquote className="font-sans border-l-2 border-primary/50 pl-5 my-6 text-muted-foreground italic">
         {children}
       </blockquote>
     ),
@@ -69,7 +69,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <ul className="ml-4 mb-5 space-y-1">{children}</ul>
     ),
     li: ({ children }) => (
-      <li className="text-base md:text-lg leading-relaxed text-foreground/90 before:content-['•'] before:inline-block before:pr-2 before:text-muted-foreground">
+      <li className="font-sans text-base md:text-lg leading-relaxed text-foreground/80 before:content-['•'] before:inline-block before:pr-2 before:text-primary/60">
         {children}
       </li>
     ),

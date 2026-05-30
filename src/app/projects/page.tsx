@@ -1,30 +1,53 @@
 import { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import { projects, ProjectLink } from "@/lib/projects"
+import { projects, Project, ProjectLink } from "@/lib/projects"
 import { IconArrowUpRight, IconArrowRight } from "@tabler/icons-react"
 
 export const metadata: Metadata = {
   title: "Projects — Mohit Kumar",
   description:
-    "Apps and projects built by Mohit Kumar — from scientific calculators to subscription trackers.",
+    "Apps and projects built by Mohit Kumar — from scientific calculators to subscription trackers and developer tools.",
 }
 
-function ProjectLinkButton({ link }: { link: ProjectLink }) {
-  const isExternal = link.external
-  const className =
-    "inline-flex items-center justify-center gap-2 border border-border text-foreground font-medium px-5 py-2.5 rounded-xl hover:bg-secondary hover:border-primary/30 transition-all duration-300 text-sm"
-
-  if (isExternal) {
+function ProjectIcon({ project }: { project: Project }) {
+  if (project.iconComponent) {
     return (
-      <a
-        href={link.href}
-        target="_blank"
-        rel="noreferrer"
-        className={className}
+      <div
+        className="shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center border"
+        style={{
+          backgroundColor: `${project.color}14`,
+          borderColor: `${project.color}33`,
+        }}
       >
+        <project.iconComponent
+          size={26}
+          stroke={1.5}
+          style={{ color: project.color }}
+        />
+      </div>
+    )
+  }
+  return (
+    <Image
+      src={project.icon!}
+      alt={`${project.name} icon`}
+      width={56}
+      height={56}
+      className="rounded-2xl shrink-0 w-12 h-12 md:w-14 md:h-14"
+    />
+  )
+}
+
+function ProjectLinkRow({ link }: { link: ProjectLink }) {
+  const className =
+    "group/link inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground hover:text-primary transition-colors"
+
+  if (link.external) {
+    return (
+      <a href={link.href} target="_blank" rel="noreferrer" className={className}>
         {link.label}
-        <IconArrowUpRight className="h-3.5 w-3.5" />
+        <IconArrowUpRight className="h-3.5 w-3.5 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
       </a>
     )
   }
@@ -32,124 +55,113 @@ function ProjectLinkButton({ link }: { link: ProjectLink }) {
   return (
     <Link href={link.href} className={className}>
       {link.label}
-      <IconArrowRight className="h-3.5 w-3.5" />
+      <IconArrowRight className="h-3.5 w-3.5 group-hover/link:translate-x-0.5 transition-transform" />
     </Link>
   )
 }
 
 export default function ProjectsPage() {
   return (
-    <main className="min-h-screen pt-28 md:pt-36 pb-20">
-      <div className="max-w-6xl mx-auto px-6 md:px-10">
-        {/* Header */}
-        <div className="mb-16 md:mb-20 animate-fadeInUp">
-          <p className="font-mono text-sm text-primary uppercase tracking-wider mb-3">
-            What I&apos;ve built
-          </p>
-          <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight">
-            Projects
-          </h1>
+    <main>
+      <div className="max-w-3xl mx-auto frame-x min-h-screen px-6 md:px-10 pt-28 md:pt-32 pb-20">
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-2 font-mono text-xs text-muted-foreground mb-14">
+          <Link href="/" className="hover:text-primary transition-colors">
+            ~
+          </Link>
+          <span className="text-muted-foreground/40">/</span>
+          <span className="text-foreground">projects</span>
         </div>
 
-        {/* Project cards */}
-        <div className="space-y-10 md:space-y-14">
-          {projects.map((project, index) => (
+        {/* Header */}
+        <header className="mb-16 md:mb-24 animate-fade-in-up">
+          <h1 className="font-display text-5xl md:text-7xl font-bold lowercase tracking-tight leading-none">
+            projects
+          </h1>
+          <p className="font-sans text-lg md:text-xl text-muted-foreground mt-6 max-w-xl leading-relaxed">
+            What I&apos;ve built — shipped apps, developer tools, and the odd
+            experiment.
+          </p>
+        </header>
+
+        {/* Entries */}
+        <div>
+          {projects.map((project, i) => (
             <article
               key={project.slug}
-              className="group border border-border rounded-2xl p-8 md:p-10 hover:border-primary/30 transition-all duration-500 animate-fadeInUp"
-              style={{
-                animationDelay: `${(index + 1) * 0.15}s`,
-                animationFillMode: "both",
-              }}
+              className="py-10 md:py-14 dashed-t first:border-t-0 first:pt-0 animate-fade-in-up"
+              style={{ animationDelay: `${0.1 * (i + 1)}s` }}
             >
-              {/* Top row: icon + name + status */}
-              <div className="flex items-start gap-5 mb-6">
-                <div
-                  className="relative shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden shadow-lg"
-                  style={{
-                    boxShadow: `0 8px 30px ${project.color}20`,
-                  }}
-                >
-                  <Image
-                    src={project.icon}
-                    alt={`${project.name} app icon`}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
+              <div className="flex items-start gap-5">
+                <ProjectIcon project={project} />
+
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 mb-1">
+                  {/* Name + status */}
+                  <div className="flex items-baseline justify-between gap-4 mb-1.5">
                     <h2 className="font-display text-2xl md:text-3xl font-bold tracking-tight">
                       {project.name}
                     </h2>
-                    <span
-                      className="font-mono text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full border"
-                      style={{
-                        color: project.color,
-                        borderColor: `${project.color}40`,
-                        backgroundColor: `${project.color}10`,
-                      }}
-                    >
+                    <span className="inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground lowercase shrink-0">
+                      <span
+                        className="w-1.5 h-1.5 rounded-full"
+                        style={{ backgroundColor: project.color }}
+                      />
                       {project.status}
                     </span>
                   </div>
-                  <p className="font-mono text-sm text-muted-foreground">
+
+                  {/* Tagline */}
+                  <p className="font-mono text-sm text-primary lowercase mb-5">
                     {project.tagline}
                   </p>
+
+                  {/* Description */}
+                  <p className="font-sans text-base md:text-lg text-foreground/70 leading-relaxed max-w-2xl mb-5">
+                    {project.description}
+                  </p>
+
+                  {/* Highlights */}
+                  <ul className="font-sans text-sm text-foreground/60 leading-relaxed space-y-1.5 mb-5 max-w-2xl">
+                    {project.features.map((feature) => (
+                      <li key={feature} className="flex gap-3">
+                        <span className="text-primary/60 shrink-0">—</span>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Stack */}
+                  <p className="font-mono text-xs text-muted-foreground/60 mb-5">
+                    {project.stack.join("  ·  ")}
+                  </p>
+
+                  {/* Links */}
+                  <div className="flex flex-wrap gap-x-6 gap-y-2">
+                    {project.links.map((link) => (
+                      <ProjectLinkRow key={link.href} link={link} />
+                    ))}
+                  </div>
                 </div>
-              </div>
-
-              {/* Description */}
-              <p className="text-base md:text-lg leading-relaxed text-foreground/80 mb-8 max-w-3xl">
-                {project.description}
-              </p>
-
-              {/* Features */}
-              <div className="mb-8">
-                <h3 className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-4">
-                  Highlights
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2.5">
-                  {project.features.map((feature) => (
-                    <div
-                      key={feature}
-                      className="flex items-start gap-2.5 text-sm text-foreground/75"
-                    >
-                      <span
-                        className="mt-2 w-1.5 h-1.5 rounded-full shrink-0"
-                        style={{ backgroundColor: project.color }}
-                      />
-                      {feature}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Tech stack */}
-              <div className="mb-8">
-                <h3 className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-3">
-                  Stack
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {project.stack.map((tech) => (
-                    <span
-                      key={tech}
-                      className="font-mono text-xs text-muted-foreground bg-secondary border border-border px-3 py-1.5 rounded-lg"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Links */}
-              <div className="flex flex-wrap gap-3">
-                {project.links.map((link) => (
-                  <ProjectLinkButton key={link.href} link={link} />
-                ))}
               </div>
             </article>
           ))}
+        </div>
+
+        {/* Footer nav */}
+        <div className="mt-16 pt-6 dashed-t flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-xs lowercase">
+          <Link
+            href="/"
+            className="text-muted-foreground hover:text-primary transition-colors"
+          >
+            ← back home
+          </Link>
+          <Link
+            href="/blogs"
+            className="group inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+          >
+            read my blogs
+            <IconArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
       </div>
     </main>

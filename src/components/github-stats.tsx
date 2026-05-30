@@ -29,30 +29,28 @@ export default function GitHubActivity() {
       href={data.repoUrl}
       target="_blank"
       rel="noreferrer"
-      className="group inline-flex items-center gap-3 border border-border hover:border-primary/30 bg-secondary/40 hover:bg-secondary/70 rounded-xl px-3 py-2.5 transition-all duration-300 w-fit"
+      className="group flex w-full overflow-hidden rounded-md border border-border bg-card/60 hover:border-primary/40 transition-colors duration-300"
     >
-      {/* Icon */}
-      <div className="shrink-0 w-9 h-9 rounded-md bg-muted flex items-center justify-center">
-        <IconGitCommit className="h-4 w-4 text-foreground" />
-      </div>
+      {/* Accent strip */}
+      <span className="w-1 self-stretch bg-primary/70 shrink-0" />
 
-      {/* Info */}
-      <div className="flex flex-col gap-0.5 min-w-0">
-        <div className="flex items-center gap-1.5">
-          <IconBrandGithub className="h-3 w-3 text-muted-foreground/60 shrink-0" />
-          <span className="font-mono text-[10px] text-muted-foreground/60 uppercase tracking-widest leading-none">
-            Hacking on
-          </span>
-          <span className="font-mono text-[10px] text-muted-foreground/40 leading-none">
-            · {data.timeAgo}
+      <div className="flex-1 min-w-0 px-3 py-2">
+        <div className="flex items-center gap-1.5 mb-1 font-mono text-[10px] lowercase tracking-widest text-muted-foreground/70">
+          <IconGitCommit className="h-3 w-3 text-primary shrink-0" />
+          <span>last commit</span>
+          <span className="ml-auto tracking-normal text-muted-foreground/40">
+            {data.timeAgo}
           </span>
         </div>
-        <span className="font-mono text-sm text-foreground leading-tight">
-          {data.repo}
-        </span>
-        <span className="font-mono text-xs text-muted-foreground leading-tight truncate max-w-[160px]">
+        <div className="flex items-center gap-1.5 min-w-0">
+          <IconBrandGithub className="h-3 w-3 text-muted-foreground/50 shrink-0" />
+          <span className="font-mono text-xs text-foreground truncate">
+            {data.repo}
+          </span>
+        </div>
+        <p className="font-mono text-[11px] text-muted-foreground truncate mt-0.5">
           {data.message}
-        </span>
+        </p>
       </div>
     </a>
   );
